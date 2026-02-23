@@ -36,7 +36,7 @@ Focused on client-based content delivered through the LMS platform.
 
 ## About
 
-This repository contains practical lab exercises completed as part of the
+This repository contains practical lab exercises for the 
 **Quality Engineering** course at **Red Academy**. The labs are sourced from the
 Learning Management System (LMS) and focus on real-world, client-based quality
 engineering scenarios.
@@ -65,10 +65,11 @@ engineering scenarios.
 
 <br/>
 
-![Testing](https://img.shields.io/badge/Testing-Methodologies-0A0A0A?style=for-the-badge&logo=checkmarx&logoColor=white)
-![QA](https://img.shields.io/badge/Quality-Assurance-1a1a2e?style=for-the-badge&logo=sonarqube&logoColor=white)
-![Git](https://img.shields.io/badge/Git-Version_Control-16213e?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-Repository-0d1117?style=for-the-badge&logo=github&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
 <br/><br/>
 
@@ -107,12 +108,10 @@ Quality-Engineering-Labs/
 
 <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=900&h=200&fit=crop&crop=center" alt="Code Quality" width="100%"/>
 
-<br/><br/>
-
-<sub>Quality Engineering Labs -- Red Academy</sub>
-
 <br/>
 
-![Made with Markdown](https://img.shields.io/badge/Made_with-Markdown-000000?style=flat-square&logo=markdown&logoColor=white)
+<sub>Quality Engineering Labs: Red Academy</sub>
+
+<br/>
 
 </div>
