@@ -27,54 +27,202 @@
   </nav>
 
   <!-- ===== HERO ===== -->
-  <main class="container">
+  <main>
     <section class="hero" data-testid="hero-section">
-      <h1 data-testid="hero-title">Playwright Testing Playground</h1>
-      <p class="hero-subtitle" data-testid="hero-subtitle">
-        A simple app built to help you practice and explore Playwright's powerful testing features.
-      </p>
-      <div class="hero-links">
-        <a href="form.html" class="hero-link">Form</a>
-        <a href="todos.html" class="hero-link">Todos</a>
-        <a href="dogs.html" class="hero-link">Dogs</a>
-        <a href="login.html" class="hero-link">Login</a>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- ===== COUNTER SECTION ===== -->
-    <section class="counter-section" data-testid="counter-section">
-      <h2 class="section-title">Quick Counter</h2>
-      <p class="section-desc">A simple counter to test state changes and button interactions.</p>
-      <div class="counter-box">
-        <button class="btn btn-icon" data-testid="decrement-btn" id="decrement-btn" aria-label="Decrement">
-          <i data-lucide="minus"></i>
-        </button>
-        <span class="counter-value" data-testid="counter-value" id="counter-value">0</span>
-        <button class="btn btn-icon" data-testid="increment-btn" id="increment-btn" aria-label="Increment">
-          <i data-lucide="plus"></i>
-        </button>
-      </div>
-      <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset</button>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- ===== JOKE SECTION ===== -->
-    <section class="joke-section" data-testid="joke-section">
-      <h2 class="section-title">Random Joke</h2>
-      <p class="section-desc">Fetches a random joke from the Chuck Norris API — great for testing async content.</p>
-      <div class="joke-box">
-        <p class="joke-text" data-testid="joke-text" id="joke-text">Click the button to load a joke!</p>
-        <div class="joke-loading" data-testid="joke-loading" id="joke-loading" style="display:none;">
-          <i data-lucide="loader" class="spin"></i> Loading...
+      <div class="hero-bg-pattern"></div>
+      <div class="hero-content">
+        <div class="hero-badge">Quality Engineering Lab</div>
+        <h1 data-testid="hero-title">Playwright Testing Playground</h1>
+        <p class="hero-subtitle" data-testid="hero-subtitle">
+          A simple app built to help you practice and explore Playwright's powerful testing features.
+        </p>
+        <div class="hero-links">
+          <a href="form.html" class="hero-link">Form</a>
+          <a href="todos.html" class="hero-link">Todos</a>
+          <a href="dogs.html" class="hero-link">Dogs</a>
+          <a href="login.html" class="hero-link">Login</a>
         </div>
       </div>
-      <button class="btn btn-primary" data-testid="fetch-joke-btn" id="fetch-joke-btn">
-        <i data-lucide="refresh-cw"></i> Get Joke
-      </button>
+      <!-- Decorative SVG illustration -->
+      <div class="hero-illustration" aria-hidden="true">
+        <svg viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="30" width="320" height="220" rx="12" fill="#f5f5f3" stroke="#e8e6e1" stroke-width="1.5"/>
+          <rect x="40" y="30" width="320" height="36" rx="12" fill="#1a1a1a"/>
+          <rect x="40" y="54" width="320" height="12" fill="#1a1a1a"/>
+          <circle cx="60" cy="48" r="5" fill="#c53030"/>
+          <circle cx="78" cy="48" r="5" fill="#c9a96e"/>
+          <circle cx="96" cy="48" r="5" fill="#2d8a4e"/>
+          <rect x="160" y="42" width="120" height="12" rx="6" fill="#333"/>
+          <rect x="64" y="86" width="120" height="10" rx="3" fill="#e8e6e1"/>
+          <rect x="64" y="106" width="200" height="8" rx="3" fill="#f0ede8"/>
+          <rect x="64" y="122" width="160" height="8" rx="3" fill="#f0ede8"/>
+          <rect x="64" y="150" width="272" height="36" rx="6" fill="#fff" stroke="#e8e6e1" stroke-width="1"/>
+          <rect x="72" y="158" width="80" height="20" rx="4" fill="#f5f5f3"/>
+          <rect x="64" y="200" width="100" height="32" rx="6" fill="#1a1a1a"/>
+          <rect x="76" y="212" width="76" height="8" rx="3" fill="#fff"/>
+          <rect x="176" y="200" width="80" height="32" rx="6" fill="#fff" stroke="#e8e6e1" stroke-width="1"/>
+          <rect x="188" y="212" width="56" height="8" rx="3" fill="#e8e6e1"/>
+          <line x1="64" y1="146" x2="336" y2="146" stroke="#e8e6e1" stroke-width="1"/>
+          <rect x="300" y="86" width="36" height="36" rx="8" fill="#f0ede8"/>
+          <path d="M312 98 L318 104 L324 98" stroke="#c9a96e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M312 106 L318 112 L324 106" stroke="#c9a96e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Cursor -->
+          <path d="M290 240 L298 268 L304 258 L316 264 L312 254 L302 254 L290 240Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+      </div>
     </section>
+
+    <!-- ===== ABOUT SECTION ===== -->
+    <section class="about-section" data-testid="about-section">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 class="about-heading">Built for Learning</h2>
+            <p class="about-description">
+              This playground provides real-world UI patterns for practicing end-to-end testing with Playwright.
+              Each page focuses on a different testing scenario — from form validation and API mocking to
+              authentication flows and dynamic content rendering.
+            </p>
+            <div class="about-stats">
+              <div class="about-stat">
+                <span class="about-stat-value">5</span>
+                <span class="about-stat-label">Interactive Pages</span>
+              </div>
+              <div class="about-stat">
+                <span class="about-stat-value">4</span>
+                <span class="about-stat-label">API Integrations</span>
+              </div>
+              <div class="about-stat">
+                <span class="about-stat-value">50+</span>
+                <span class="about-stat-label">Test Scenarios</span>
+              </div>
+            </div>
+          </div>
+          <div class="about-visual" aria-hidden="true">
+            <div class="about-code-block">
+              <div class="code-header">
+                <span class="code-dot code-dot--red"></span>
+                <span class="code-dot code-dot--yellow"></span>
+                <span class="code-dot code-dot--green"></span>
+                <span class="code-filename">example.spec.ts</span>
+              </div>
+              <pre class="code-body"><code><span class="code-kw">import</span> { test, expect } <span class="code-kw">from</span> <span class="code-str">'@playwright/test'</span>;
+
+<span class="code-fn">test</span>(<span class="code-str">'counter increments'</span>, <span class="code-kw">async</span> ({ page }) => {
+  <span class="code-kw">await</span> page.goto(<span class="code-str">'/'</span>);
+  <span class="code-kw">await</span> page.getByTestId(<span class="code-str">'increment-btn'</span>).click();
+  <span class="code-kw">await</span> expect(page.getByTestId(<span class="code-str">'counter-value'</span>))
+    .toHaveText(<span class="code-str">'1'</span>);
+});</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <section class="features-section" data-testid="features-section">
+      <div class="container">
+        <h2 class="features-heading">Explore the Playground</h2>
+        <p class="features-subheading">Each page is designed around a common testing pattern you will encounter in real projects.</p>
+        <div class="features-grid">
+          <!-- Form Card -->
+          <a href="form.html" class="feature-card">
+            <div class="feature-icon feature-icon--form">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Form Playground</h3>
+            <p class="feature-desc">Text inputs, selects, checkboxes, radio buttons, sliders, toggles, and validation patterns.</p>
+            <span class="feature-link-text">Explore form testing</span>
+          </a>
+          <!-- Todos Card -->
+          <a href="todos.html" class="feature-card">
+            <div class="feature-icon feature-icon--todos">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Todo List</h3>
+            <p class="feature-desc">API-driven list with add, toggle, delete, and filter operations for CRUD testing.</p>
+            <span class="feature-link-text">Explore todo testing</span>
+          </a>
+          <!-- Dogs Card -->
+          <a href="dogs.html" class="feature-card">
+            <div class="feature-icon feature-icon--dogs">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Dog Gallery</h3>
+            <p class="feature-desc">Dynamic image grid with breed filtering, lazy loading, and async content rendering.</p>
+            <span class="feature-link-text">Explore gallery testing</span>
+          </a>
+          <!-- Login Card -->
+          <a href="login.html" class="feature-card">
+            <div class="feature-icon feature-icon--login">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Authentication</h3>
+            <p class="feature-desc">Login flow with localStorage, sessionStorage, cookies, and protected dashboard state.</p>
+            <span class="feature-link-text">Explore auth testing</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INTERACTIVE DEMOS ===== -->
+    <div class="container">
+      <div class="divider"></div>
+
+      <!-- ===== COUNTER SECTION ===== -->
+      <section class="counter-section" data-testid="counter-section">
+        <h2 class="section-title">Quick Counter</h2>
+        <p class="section-desc">A simple counter to test state changes and button interactions.</p>
+        <div class="counter-card">
+          <div class="counter-box">
+            <button class="btn btn-icon" data-testid="decrement-btn" id="decrement-btn" aria-label="Decrement">
+              <i data-lucide="minus"></i>
+            </button>
+            <span class="counter-value" data-testid="counter-value" id="counter-value">0</span>
+            <button class="btn btn-icon" data-testid="increment-btn" id="increment-btn" aria-label="Increment">
+              <i data-lucide="plus"></i>
+            </button>
+          </div>
+          <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset</button>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ===== JOKE SECTION ===== -->
+      <section class="joke-section" data-testid="joke-section">
+        <h2 class="section-title">Random Joke</h2>
+        <p class="section-desc">Fetches a random joke from the Chuck Norris API — great for testing async content.</p>
+        <div class="joke-box">
+          <p class="joke-text" data-testid="joke-text" id="joke-text">Click the button to load a joke!</p>
+          <div class="joke-loading" data-testid="joke-loading" id="joke-loading" style="display:none;">
+            <i data-lucide="loader" class="spin"></i> Loading...
+          </div>
+        </div>
+        <button class="btn btn-primary" data-testid="fetch-joke-btn" id="fetch-joke-btn">
+          <i data-lucide="refresh-cw"></i> Get Joke
+        </button>
+      </section>
+    </div>
   </main>
 
   <!-- ===== FOOTER ===== -->
