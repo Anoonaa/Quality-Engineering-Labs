@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Playwright Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="brand-text">Playwright Lab</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="todos.html" class="nav-link" data-page="todos">Todos</a></li>
+      <li><a href="dogs.html" class="nav-link" data-page="dogs">Dogs</a></li>
+      <li><a href="form.html" class="nav-link" data-page="form">Form</a></li>
+      <li><a href="login.html" class="nav-link active" data-page="login">Login</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Login Form -->
+    <section class="auth-section" id="login-section" data-testid="login-section">
+      <div class="auth-card">
+        <div class="auth-header">
+          <i data-lucide="shield" class="auth-icon"></i>
+          <h1 data-testid="login-title">Sign In</h1>
+          <p>Enter your credentials to access the dashboard</p>
+        </div>
+
+        <form id="login-form" data-testid="login-form">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="login-username" name="username" data-testid="login-username" 
+                     class="input input-with-icon" placeholder="Enter username" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="login-password" name="password" data-testid="login-password" 
+                     class="input input-with-icon" placeholder="Enter password" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remember-me" data-testid="remember-me" />
+              Remember me
+            </label>
+          </div>
+
+          <div class="login-error" data-testid="login-error" id="login-error" style="display:none;">
+            <i data-lucide="alert-circle"></i>
+            <span>Invalid username or password</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" data-testid="login-submit">
+            <i data-lucide="log-in"></i> Sign In
+          </button>
+        </form>
+
+        <div class="auth-hint">
+          <p>Hint: Use <strong>admin</strong> / <strong>password123</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard (shown after login) -->
+    <section class="dashboard-section" id="dashboard-section" data-testid="dashboard-section" style="display:none;">
+      <div class="page-header">
+        <h1 data-testid="dashboard-title"><i data-lucide="layout-dashboard"></i> Dashboard</h1>
+        <p class="page-desc">Welcome back! You're now logged in. This section demonstrates authenticated state.</p>
+      </div>
+
+      <div class="dash-cards">
+        <div class="dash-card" data-testid="dash-card-posts">
+          <div class="dash-card-icon" style="background: var(--primary-light);"><i data-lucide="file-text"></i></div>
+          <div class="dash-card-info">
+            <span class="dash-card-value" data-testid="posts-count" id="posts-count">--</span>
+            <span class="dash-card-label">Posts</span>
+          </div>
+        </div>
+        <div class="dash-card" data-testid="dash-card-users">
+          <div class="dash-card-icon" style="background: var(--success-light);"><i data-lucide="users"></i></div>
+          <div class="dash-card-info">
+            <span class="dash-card-value" data-testid="users-count" id="users-count">--</span>
+            <span class="dash-card-label">Users</span>
+          </div>
+        </div>
+        <div class="dash-card" data-testid="dash-card-comments">
+          <div class="dash-card-icon" style="background: var(--warning-light);"><i data-lucide="message-square"></i></div>
+          <div class="dash-card-info">
+            <span class="dash-card-value" data-testid="comments-count" id="comments-count">--</span>
+            <span class="dash-card-label">Comments</span>
+          </div>
+        </div>
+        <div class="dash-card" data-testid="dash-card-albums">
+          <div class="dash-card-icon" style="background: var(--danger-light);"><i data-lucide="image"></i></div>
+          <div class="dash-card-info">
+            <span class="dash-card-value" data-testid="albums-count" id="albums-count">--</span>
+            <span class="dash-card-label">Albums</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session info -->
+      <div class="session-info" data-testid="session-info">
+        <h3><i data-lucide="info"></i> Session Info</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Username:</span>
+            <span class="info-value" data-testid="session-username" id="session-username"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Login Time:</span>
+            <span class="info-value" data-testid="session-time" id="session-time"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Token (localStorage):</span>
+            <span class="info-value" data-testid="session-token" id="session-token"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Session ID (sessionStorage):</span>
+            <span class="info-value" data-testid="session-id" id="session-id"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 Playwright Lab. Built for testing purposes.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const VALID_USER = 'admin';
+    const VALID_PASS = 'password123';
+
+    function showDashboard() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'block';
+
+      const user = localStorage.getItem('user');
+      document.getElementById('session-username').textContent = user;
+      document.getElementById('session-time').textContent = localStorage.getItem('loginTime');
+      document.getElementById('session-token').textContent = localStorage.getItem('token');
+      document.getElementById('session-id').textContent = sessionStorage.getItem('sessionId');
+
+      // Fetch dashboard stats from JSONPlaceholder
+      fetchStats();
+      lucide.createIcons();
+    }
+
+    async function fetchStats() {
+      try {
+        const [posts, users, comments, albums] = await Promise.all([
+          fetch('https://jsonplaceholder.typicode.com/posts').then(r => r.json()),
+          fetch('https://jsonplaceholder.typicode.com/users').then(r => r.json()),
+          fetch('https://jsonplaceholder.typicode.com/comments').then(r => r.json()),
+          fetch('https://jsonplaceholder.typicode.com/albums').then(r => r.json()),
+        ]);
+        document.getElementById('posts-count').textContent = posts.length;
+        document.getElementById('users-count').textContent = users.length;
+        document.getElementById('comments-count').textContent = comments.length;
+        document.getElementById('albums-count').textContent = albums.length;
+      } catch (e) {
+        // Fail silently
+      }
+    }
+
+    // Check if already logged in
+    if (localStorage.getItem('token')) {
+      showDashboard();
+    }
+
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const remember = document.getElementById('remember-me').checked;
+
+      if (username === VALID_USER && password === VALID_PASS) {
+        // Set auth state
+        const token = 'fake-jwt-token-' + Date.now();
+        const sessionId = 'session-' + Math.random().toString(36).substring(2, 10);
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', username);
+        localStorage.setItem('loginTime', new Date().toLocaleString());
+        sessionStorage.setItem('sessionId', sessionId);
+
+        if (remember) {
+          document.cookie = `rememberMe=true; path=/; max-age=86400`;
+        }
+
+        document.getElementById('login-error').style.display = 'none';
+        showDashboard();
+      } else {
+        document.getElementById('login-error').style.display = 'flex';
+      }
+    });
+  </script>
+</body>
+</html>

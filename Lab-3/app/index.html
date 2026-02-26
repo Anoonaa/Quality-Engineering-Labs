@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playwright Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="brand-text">Playwright Lab</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active" data-page="home">Home</a></li>
+      <li><a href="todos.html" class="nav-link" data-page="todos">Todos</a></li>
+      <li><a href="dogs.html" class="nav-link" data-page="dogs">Dogs</a></li>
+      <li><a href="form.html" class="nav-link" data-page="form">Form</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <main class="container">
+    <section class="hero" data-testid="hero-section">
+      <h1 data-testid="hero-title">Playwright Testing Playground</h1>
+      <p class="hero-subtitle" data-testid="hero-subtitle">
+        A simple app built to help you practice and explore Playwright's powerful testing features.
+      </p>
+      <div class="hero-links">
+        <a href="form.html" class="hero-link">Form</a>
+        <a href="todos.html" class="hero-link">Todos</a>
+        <a href="dogs.html" class="hero-link">Dogs</a>
+        <a href="login.html" class="hero-link">Login</a>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ===== COUNTER SECTION ===== -->
+    <section class="counter-section" data-testid="counter-section">
+      <h2 class="section-title">Quick Counter</h2>
+      <p class="section-desc">A simple counter to test state changes and button interactions.</p>
+      <div class="counter-box">
+        <button class="btn btn-icon" data-testid="decrement-btn" id="decrement-btn" aria-label="Decrement">
+          <i data-lucide="minus"></i>
+        </button>
+        <span class="counter-value" data-testid="counter-value" id="counter-value">0</span>
+        <button class="btn btn-icon" data-testid="increment-btn" id="increment-btn" aria-label="Increment">
+          <i data-lucide="plus"></i>
+        </button>
+      </div>
+      <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset</button>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ===== JOKE SECTION ===== -->
+    <section class="joke-section" data-testid="joke-section">
+      <h2 class="section-title">Random Joke</h2>
+      <p class="section-desc">Fetches a random joke from the Chuck Norris API — great for testing async content.</p>
+      <div class="joke-box">
+        <p class="joke-text" data-testid="joke-text" id="joke-text">Click the button to load a joke!</p>
+        <div class="joke-loading" data-testid="joke-loading" id="joke-loading" style="display:none;">
+          <i data-lucide="loader" class="spin"></i> Loading...
+        </div>
+      </div>
+      <button class="btn btn-primary" data-testid="fetch-joke-btn" id="fetch-joke-btn">
+        <i data-lucide="refresh-cw"></i> Get Joke
+      </button>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <p>&copy; 2026 Playwright Lab</p>
+      <ul class="footer-links">
+        <li><a href="todos.html">Todos</a></li>
+        <li><a href="dogs.html">Dogs</a></li>
+        <li><a href="form.html">Form</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Counter
+    let count = 0;
+    const counterEl = document.getElementById('counter-value');
+    document.getElementById('increment-btn').addEventListener('click', () => {
+      count++;
+      counterEl.textContent = count;
+    });
+    document.getElementById('decrement-btn').addEventListener('click', () => {
+      count--;
+      counterEl.textContent = count;
+    });
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      count = 0;
+      counterEl.textContent = count;
+    });
+
+    // Joke fetcher
+    document.getElementById('fetch-joke-btn').addEventListener('click', async () => {
+      const jokeText = document.getElementById('joke-text');
+      const loading = document.getElementById('joke-loading');
+      jokeText.style.display = 'none';
+      loading.style.display = 'flex';
+      try {
+        const res = await fetch('https://api.chucknorris.io/jokes/random');
+        const data = await res.json();
+        jokeText.textContent = data.value;
+      } catch (e) {
+        jokeText.textContent = 'Failed to load joke. Try again!';
+      }
+      loading.style.display = 'none';
+      jokeText.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
