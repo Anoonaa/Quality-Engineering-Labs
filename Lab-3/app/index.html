@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Playwright Lab</title>
+  <title>FinLab</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -11,13 +11,13 @@
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-brand">
-      <span class="brand-text">Playwright Lab</span>
+      <span class="brand-text">FinLab</span>
     </div>
     <ul class="nav-links">
       <li><a href="index.html" class="nav-link active" data-page="home">Home</a></li>
-      <li><a href="todos.html" class="nav-link" data-page="todos">Todos</a></li>
-      <li><a href="dogs.html" class="nav-link" data-page="dogs">Dogs</a></li>
-      <li><a href="form.html" class="nav-link" data-page="form">Form</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Market</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Payment</a></li>
       <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
@@ -32,14 +32,14 @@
       <div class="hero-bg-pattern"></div>
       <div class="hero-content">
         <div class="hero-badge">Quality Engineering Lab</div>
-        <h1 data-testid="hero-title">Playwright Testing Playground</h1>
+        <h1 data-testid="hero-title">Fintech Testing Playground</h1>
         <p class="hero-subtitle" data-testid="hero-subtitle">
-          A simple app built to help you practice and explore Playwright's powerful testing features.
+          A fintech app built to help you practice and explore Playwright's powerful testing features in a financial context.
         </p>
         <div class="hero-links">
-          <a href="form.html" class="hero-link">Form</a>
-          <a href="todos.html" class="hero-link">Todos</a>
-          <a href="dogs.html" class="hero-link">Dogs</a>
+          <a href="payment.html" class="hero-link">Payment</a>
+          <a href="transactions.html" class="hero-link">Transactions</a>
+          <a href="market.html" class="hero-link">Market</a>
           <a href="login.html" class="hero-link">Login</a>
         </div>
       </div>
@@ -79,9 +79,9 @@
           <div class="about-text">
             <h2 class="about-heading">Built for Learning</h2>
             <p class="about-description">
-              This playground provides real-world UI patterns for practicing end-to-end testing with Playwright.
-              Each page focuses on a different testing scenario — from form validation and API mocking to
-              authentication flows and dynamic content rendering.
+              This fintech playground provides real-world financial UI patterns for practicing end-to-end testing with Playwright.
+              Each page focuses on a different testing scenario - from payment forms and transaction management to
+              live market data and authentication flows.
             </p>
             <div class="about-stats">
               <div class="about-stat">
@@ -89,7 +89,7 @@
                 <span class="about-stat-label">Interactive Pages</span>
               </div>
               <div class="about-stat">
-                <span class="about-stat-value">4</span>
+                <span class="about-stat-value">3</span>
                 <span class="about-stat-label">API Integrations</span>
               </div>
               <div class="about-stat">
@@ -108,11 +108,11 @@
               </div>
               <pre class="code-body"><code><span class="code-kw">import</span> { test, expect } <span class="code-kw">from</span> <span class="code-str">'@playwright/test'</span>;
 
-<span class="code-fn">test</span>(<span class="code-str">'counter increments'</span>, <span class="code-kw">async</span> ({ page }) => {
+<span class="code-fn">test</span>(<span class="code-str">'deposit increases balance'</span>, <span class="code-kw">async</span> ({ page }) => {
   <span class="code-kw">await</span> page.goto(<span class="code-str">'/'</span>);
-  <span class="code-kw">await</span> page.getByTestId(<span class="code-str">'increment-btn'</span>).click();
-  <span class="code-kw">await</span> expect(page.getByTestId(<span class="code-str">'counter-value'</span>))
-    .toHaveText(<span class="code-str">'1'</span>);
+  <span class="code-kw">await</span> page.getByTestId(<span class="code-str">'deposit-btn'</span>).click();
+  <span class="code-kw">await</span> expect(page.getByTestId(<span class="code-str">'balance-value'</span>))
+    .toHaveText(<span class="code-str">'$1,100'</span>);
 });</code></pre>
             </div>
           </div>
@@ -125,37 +125,37 @@
       <div class="divider"></div>
 
       <!-- ===== COUNTER SECTION ===== -->
-      <section class="counter-section" data-testid="counter-section">
-        <h2 class="section-title">Quick Counter</h2>
-        <p class="section-desc">A simple counter to test state changes and button interactions.</p>
+      <section class="counter-section" data-testid="balance-section">
+        <h2 class="section-title">Quick Balance</h2>
+        <p class="section-desc">A simple balance widget to test state changes and button interactions.</p>
         <div class="counter-card">
           <div class="counter-box">
-            <button class="btn btn-icon" data-testid="decrement-btn" id="decrement-btn" aria-label="Decrement">
+            <button class="btn btn-icon" data-testid="withdraw-btn" id="withdraw-btn" aria-label="Withdraw">
               <i data-lucide="minus"></i>
             </button>
-            <span class="counter-value" data-testid="counter-value" id="counter-value">0</span>
-            <button class="btn btn-icon" data-testid="increment-btn" id="increment-btn" aria-label="Increment">
+            <span class="counter-value" data-testid="balance-value" id="balance-value">$1,000</span>
+            <button class="btn btn-icon" data-testid="deposit-btn" id="deposit-btn" aria-label="Deposit">
               <i data-lucide="plus"></i>
             </button>
           </div>
-          <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset</button>
+          <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset Balance</button>
         </div>
       </section>
 
       <div class="divider"></div>
 
       <!-- ===== JOKE SECTION ===== -->
-      <section class="joke-section" data-testid="joke-section">
-        <h2 class="section-title">Random Joke</h2>
-        <p class="section-desc">Fetches a random joke from the Chuck Norris API — great for testing async content.</p>
+      <section class="joke-section" data-testid="rate-section">
+        <h2 class="section-title">Live Exchange Rate</h2>
+        <p class="section-desc">Fetches a live USD to ZAR exchange rate - great for testing async content.</p>
         <div class="joke-box">
-          <p class="joke-text" data-testid="joke-text" id="joke-text">Click the button to load a joke!</p>
-          <div class="joke-loading" data-testid="joke-loading" id="joke-loading" style="display:none;">
+          <p class="joke-text" data-testid="rate-text" id="rate-text">Click the button to fetch the latest rate!</p>
+          <div class="joke-loading" data-testid="rate-loading" id="rate-loading" style="display:none;">
             <i data-lucide="loader" class="spin"></i> Loading...
           </div>
         </div>
-        <button class="btn btn-primary" data-testid="fetch-joke-btn" id="fetch-joke-btn">
-          <i data-lucide="refresh-cw"></i> Get Joke
+        <button class="btn btn-primary" data-testid="fetch-rate-btn" id="fetch-rate-btn">
+          <i data-lucide="refresh-cw"></i> Get Rate
         </button>
       </section>
     </div>
@@ -164,11 +164,11 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
-      <p>&copy; 2026 Playwright Lab</p>
+      <p>&copy; 2026 FinLab</p>
       <ul class="footer-links">
-        <li><a href="todos.html">Todos</a></li>
-        <li><a href="dogs.html">Dogs</a></li>
-        <li><a href="form.html">Form</a></li>
+        <li><a href="transactions.html">Transactions</a></li>
+        <li><a href="market.html">Market</a></li>
+        <li><a href="payment.html">Payment</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </div>
@@ -176,37 +176,44 @@
 
   <script src="app.js"></script>
   <script>
-    // Counter
-    let count = 0;
-    const counterEl = document.getElementById('counter-value');
-    document.getElementById('increment-btn').addEventListener('click', () => {
-      count++;
-      counterEl.textContent = count;
+    // Balance
+    let balance = 1000;
+    const balanceEl = document.getElementById('balance-value');
+
+    function formatBalance(val) {
+      const prefix = val < 0 ? '-$' : '$';
+      return prefix + Math.abs(val).toLocaleString();
+    }
+
+    document.getElementById('deposit-btn').addEventListener('click', () => {
+      balance += 100;
+      balanceEl.textContent = formatBalance(balance);
     });
-    document.getElementById('decrement-btn').addEventListener('click', () => {
-      count--;
-      counterEl.textContent = count;
+    document.getElementById('withdraw-btn').addEventListener('click', () => {
+      balance -= 100;
+      balanceEl.textContent = formatBalance(balance);
     });
     document.getElementById('reset-btn').addEventListener('click', () => {
-      count = 0;
-      counterEl.textContent = count;
+      balance = 1000;
+      balanceEl.textContent = formatBalance(balance);
     });
 
-    // Joke fetcher
-    document.getElementById('fetch-joke-btn').addEventListener('click', async () => {
-      const jokeText = document.getElementById('joke-text');
-      const loading = document.getElementById('joke-loading');
-      jokeText.style.display = 'none';
+    // Exchange rate fetcher
+    document.getElementById('fetch-rate-btn').addEventListener('click', async () => {
+      const rateText = document.getElementById('rate-text');
+      const loading = document.getElementById('rate-loading');
+      rateText.style.display = 'none';
       loading.style.display = 'flex';
       try {
-        const res = await fetch('https://api.chucknorris.io/jokes/random');
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
         const data = await res.json();
-        jokeText.textContent = data.value;
+        const zarRate = data.rates.ZAR;
+        rateText.textContent = `1 USD = ${zarRate.toFixed(4)} ZAR`;
       } catch (e) {
-        jokeText.textContent = 'Failed to load joke. Try again!';
+        rateText.textContent = 'Failed to load rate. Try again!';
       }
       loading.style.display = 'none';
-      jokeText.style.display = 'block';
+      rateText.style.display = 'block';
     });
   </script>
 </body>

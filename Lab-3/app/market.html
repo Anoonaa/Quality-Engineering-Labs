@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market - FinLab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="brand-text">FinLab</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="market.html" class="nav-link active" data-page="market">Market</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Payment</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="trending-up"></i> Market Rates</h1>
+      <p class="page-desc">Live exchange rates powered by <a href="https://www.exchangerate-api.com" target="_blank">ExchangeRate API</a>. Great for testing dynamic content, loading states, and async data.</p>
+    </section>
+
+    <!-- Controls -->
+    <div class="dog-controls">
+      <div class="select-wrapper">
+        <label for="base-currency">Base Currency:</label>
+        <select id="base-currency" data-testid="base-currency" class="input select" aria-label="Select base currency">
+          <option value="USD">USD - US Dollar</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - British Pound</option>
+          <option value="JPY">JPY - Japanese Yen</option>
+          <option value="ZAR">ZAR - South African Rand</option>
+          <option value="AUD">AUD - Australian Dollar</option>
+          <option value="CAD">CAD - Canadian Dollar</option>
+          <option value="CHF">CHF - Swiss Franc</option>
+        </select>
+      </div>
+      <div class="count-wrapper">
+        <label for="rate-count">Show:</label>
+        <input type="number" id="rate-count" data-testid="rate-count" class="input" value="6" min="1" max="20" aria-label="Number of rates to display" />
+      </div>
+      <button class="btn btn-primary" data-testid="fetch-rates-btn" id="fetch-rates-btn">
+        <i data-lucide="refresh-cw"></i> Fetch Rates
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" data-testid="rates-loading" id="rates-loading" style="display:none;">
+      <i data-lucide="loader" class="spin"></i> Fetching exchange rates...
+    </div>
+
+    <!-- Rate Cards -->
+    <div class="market-grid" data-testid="rates-grid" id="rates-grid"></div>
+
+    <!-- Error -->
+    <div class="error-state" data-testid="rates-error" id="rates-error" style="display:none;">
+      <i data-lucide="alert-triangle"></i>
+      <p>Failed to load rates. Please try again.</p>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const baseCurrency = document.getElementById('base-currency');
+    const rateCountInput = document.getElementById('rate-count');
+    const ratesGrid = document.getElementById('rates-grid');
+    const loading = document.getElementById('rates-loading');
+    const errorState = document.getElementById('rates-error');
+
+    const currencyNames = {
+      USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', JPY: 'Japanese Yen',
+      ZAR: 'South African Rand', AUD: 'Australian Dollar', CAD: 'Canadian Dollar',
+      CHF: 'Swiss Franc', CNY: 'Chinese Yuan', INR: 'Indian Rupee', BRL: 'Brazilian Real',
+      MXN: 'Mexican Peso', KRW: 'South Korean Won', SEK: 'Swedish Krona',
+      NZD: 'New Zealand Dollar', SGD: 'Singapore Dollar', HKD: 'Hong Kong Dollar',
+      NOK: 'Norwegian Krone', TRY: 'Turkish Lira', RUB: 'Russian Ruble',
+      PLN: 'Polish Zloty', THB: 'Thai Baht', IDR: 'Indonesian Rupiah',
+      DKK: 'Danish Krone', MYR: 'Malaysian Ringgit', PHP: 'Philippine Peso',
+      CZK: 'Czech Koruna', ILS: 'Israeli Shekel', CLP: 'Chilean Peso',
+      ARS: 'Argentine Peso', EGP: 'Egyptian Pound', NGN: 'Nigerian Naira',
+      KES: 'Kenyan Shilling', GHS: 'Ghanaian Cedi'
+    };
+
+    async function fetchRates() {
+      const base = baseCurrency.value;
+      const count = Math.min(Math.max(parseInt(rateCountInput.value) || 6, 1), 20);
+
+      ratesGrid.innerHTML = '';
+      errorState.style.display = 'none';
+      loading.style.display = 'flex';
+
+      try {
+        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${base}`);
+        const data = await res.json();
+
+        if (data.rates) {
+          const entries = Object.entries(data.rates)
+            .filter(([code]) => code !== base)
+            .slice(0, count);
+
+          entries.forEach(([code, rate], i) => {
+            const card = document.createElement('div');
+            card.className = 'rate-card';
+            card.setAttribute('data-testid', `rate-card-${i}`);
+
+            const change = (Math.random() * 4 - 2).toFixed(2);
+            const isPositive = parseFloat(change) >= 0;
+
+            card.innerHTML = `
+              <div class="rate-card-header">
+                <span class="rate-currency-code" data-testid="rate-code-${i}">${code}</span>
+                <button class="btn btn-icon rate-bookmark" data-testid="bookmark-btn-${i}" aria-label="Bookmark ${code}">
+                  <i data-lucide="star"></i>
+                </button>
+              </div>
+              <div class="rate-currency-name" data-testid="rate-name-${i}">${currencyNames[code] || code}</div>
+              <div class="rate-value" data-testid="rate-value-${i}">${rate.toFixed(4)}</div>
+              <div class="rate-change ${isPositive ? 'rate-change-up' : 'rate-change-down'}" data-testid="rate-change-${i}">
+                <i data-lucide="${isPositive ? 'trending-up' : 'trending-down'}"></i>
+                ${isPositive ? '+' : ''}${change}%
+              </div>
+            `;
+
+            card.querySelector('.rate-bookmark').addEventListener('click', (e) => {
+              e.currentTarget.classList.toggle('active');
+            });
+
+            ratesGrid.appendChild(card);
+          });
+
+          lucide.createIcons();
+        } else {
+          throw new Error('API error');
+        }
+      } catch (e) {
+        errorState.style.display = 'flex';
+      }
+
+      loading.style.display = 'none';
+    }
+
+    document.getElementById('fetch-rates-btn').addEventListener('click', fetchRates);
+    fetchRates();
+  </script>
+</body>
+</html>

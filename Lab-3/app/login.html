@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Playwright Lab</title>
+  <title>Login - FinLab</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-brand">
-      <span class="brand-text">Playwright Lab</span>
+      <span class="brand-text">FinLab</span>
     </div>
     <ul class="nav-links">
       <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
-      <li><a href="todos.html" class="nav-link" data-page="todos">Todos</a></li>
-      <li><a href="dogs.html" class="nav-link" data-page="dogs">Dogs</a></li>
-      <li><a href="form.html" class="nav-link" data-page="form">Form</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Market</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Payment</a></li>
       <li><a href="login.html" class="nav-link active" data-page="login">Login</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
@@ -32,7 +32,7 @@
         <div class="auth-header">
           <i data-lucide="shield" class="auth-icon"></i>
           <h1 data-testid="login-title">Sign In</h1>
-          <p>Enter your credentials to access the dashboard</p>
+          <p>Enter your credentials to access your financial dashboard</p>
         </div>
 
         <form id="login-form" data-testid="login-form">
@@ -79,37 +79,37 @@
     <!-- Dashboard (shown after login) -->
     <section class="dashboard-section" id="dashboard-section" data-testid="dashboard-section" style="display:none;">
       <div class="page-header">
-        <h1 data-testid="dashboard-title"><i data-lucide="layout-dashboard"></i> Dashboard</h1>
+        <h1 data-testid="dashboard-title"><i data-lucide="layout-dashboard"></i> Financial Dashboard</h1>
         <p class="page-desc">Welcome back! You're now logged in. This section demonstrates authenticated state.</p>
       </div>
 
       <div class="dash-cards">
-        <div class="dash-card" data-testid="dash-card-posts">
-          <div class="dash-card-icon" style="background: var(--primary-light);"><i data-lucide="file-text"></i></div>
+        <div class="dash-card" data-testid="dash-card-balance">
+          <div class="dash-card-icon" style="background: var(--primary-light);"><i data-lucide="wallet"></i></div>
           <div class="dash-card-info">
-            <span class="dash-card-value" data-testid="posts-count" id="posts-count">--</span>
-            <span class="dash-card-label">Posts</span>
+            <span class="dash-card-value" data-testid="balance-amount" id="balance-amount">--</span>
+            <span class="dash-card-label">Balance</span>
           </div>
         </div>
-        <div class="dash-card" data-testid="dash-card-users">
-          <div class="dash-card-icon" style="background: var(--success-light);"><i data-lucide="users"></i></div>
+        <div class="dash-card" data-testid="dash-card-transactions">
+          <div class="dash-card-icon" style="background: var(--success-light);"><i data-lucide="receipt"></i></div>
           <div class="dash-card-info">
-            <span class="dash-card-value" data-testid="users-count" id="users-count">--</span>
-            <span class="dash-card-label">Users</span>
+            <span class="dash-card-value" data-testid="transactions-count" id="transactions-count">--</span>
+            <span class="dash-card-label">Transactions</span>
           </div>
         </div>
-        <div class="dash-card" data-testid="dash-card-comments">
-          <div class="dash-card-icon" style="background: var(--warning-light);"><i data-lucide="message-square"></i></div>
+        <div class="dash-card" data-testid="dash-card-accounts">
+          <div class="dash-card-icon" style="background: var(--warning-light);"><i data-lucide="building-2"></i></div>
           <div class="dash-card-info">
-            <span class="dash-card-value" data-testid="comments-count" id="comments-count">--</span>
-            <span class="dash-card-label">Comments</span>
+            <span class="dash-card-value" data-testid="accounts-count" id="accounts-count">--</span>
+            <span class="dash-card-label">Accounts</span>
           </div>
         </div>
-        <div class="dash-card" data-testid="dash-card-albums">
-          <div class="dash-card-icon" style="background: var(--danger-light);"><i data-lucide="image"></i></div>
+        <div class="dash-card" data-testid="dash-card-savings">
+          <div class="dash-card-icon" style="background: var(--danger-light);"><i data-lucide="piggy-bank"></i></div>
           <div class="dash-card-info">
-            <span class="dash-card-value" data-testid="albums-count" id="albums-count">--</span>
-            <span class="dash-card-label">Albums</span>
+            <span class="dash-card-value" data-testid="savings-amount" id="savings-amount">--</span>
+            <span class="dash-card-label">Savings</span>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 Playwright Lab. Built for testing purposes.</p>
+    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
   </footer>
 
   <script src="app.js"></script>
@@ -171,10 +171,10 @@
           fetch('https://jsonplaceholder.typicode.com/comments').then(r => r.json()),
           fetch('https://jsonplaceholder.typicode.com/albums').then(r => r.json()),
         ]);
-        document.getElementById('posts-count').textContent = posts.length;
-        document.getElementById('users-count').textContent = users.length;
-        document.getElementById('comments-count').textContent = comments.length;
-        document.getElementById('albums-count').textContent = albums.length;
+        document.getElementById('balance-amount').textContent = '$' + (posts.length * 125.50).toLocaleString();
+        document.getElementById('transactions-count').textContent = comments.length;
+        document.getElementById('accounts-count').textContent = users.length;
+        document.getElementById('savings-amount').textContent = '$' + (albums.length * 89.99).toLocaleString();
       } catch (e) {
         // Fail silently
       }

@@ -14,7 +14,7 @@
 
 <br/>
 
-**Playwright Testing Playground - a purpose-built web app for practicing automated testing with Playwright.**
+**FinLab - a fintech testing playground built for practicing automated testing with Playwright.**
 This lab is part of the Quality Engineering program at Red Academy.
 
 [![Live App](https://img.shields.io/badge/Live_App-quality--engineering--labs.vercel.app-000?style=flat-square&logo=vercel)](https://quality-engineering-labs.vercel.app/)
@@ -25,7 +25,7 @@ This lab is part of the Quality Engineering program at Red Academy.
 
 ## About
 
-Lab 3 is a static web application built specifically for **Quality Engineering** students at **Red Academy** to practice automated testing using [Playwright](https://playwright.dev). The app is made up of multiple pages, each designed to expose different UI patterns and API integrations that you would encounter in real-world testing scenarios.
+Lab 3 is a fintech web application built specifically for **Quality Engineering** students at **Red Academy** to practice automated testing using [Playwright](https://playwright.dev). The app simulates a financial platform with multiple pages, each designed to expose different UI patterns and API integrations that you would encounter when testing real-world fintech applications.
 
 The app is deployed at **[quality-engineering-labs.vercel.app](https://quality-engineering-labs.vercel.app/)**.
 
@@ -39,7 +39,7 @@ The goal is to give you a controlled environment to practice core Playwright con
 - **Navigation** - page transitions, URL assertions, and multi-page workflows
 - **State Management** - `localStorage`, `sessionStorage`, cookies, and authenticated flows
 - **API / Async Testing** - handling loading states, network requests, and dynamically rendered content
-- **Form Interactions** - filling inputs, selecting options, toggling checkboxes, radio buttons, sliders, and validating submissions
+- **Form Interactions** - filling inputs, selecting options, toggling checkboxes, radio buttons, sliders, and validating payment submissions
 
 ---
 
@@ -49,37 +49,41 @@ The app lives in the `app/` directory and consists of five pages:
 
 ### Home (`index.html`)
 
-- Hero section with navigation links
-- **Counter widget** - increment, decrement, and reset buttons for testing state changes and button interactions
-- **Random Joke fetcher** - calls the [Chuck Norris API](https://api.chucknorris.io) to load async content, great for testing loading states and dynamic text
+- Hero section with navigation links to all pages
+- **Balance widget** - deposit, withdraw, and reset buttons for testing state changes and button interactions
+- **Live Exchange Rate fetcher** - calls the [ExchangeRate API](https://www.exchangerate-api.com) to fetch USD/ZAR rates, great for testing loading states and dynamic text
 
-### Todo List (`todos.html`)
+### Transactions (`transactions.html`)
 
-- Fetches todos from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com)
-- Add, complete, and delete todos
-- Filter by **All**, **Active**, or **Completed**
-- Displays item counts and empty states
+- Fetches and transforms data from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com) into financial transactions
+- Add transactions with description, amount, and type (income/expense)
+- Mark transactions as processed, or delete them
+- Filter by **All**, **Income**, or **Expense**
+- Displays transaction count and net balance (color-coded)
 - Perfect for practicing list rendering assertions, CRUD operations, and filtering logic
 
-### Dog Gallery (`dogs.html`)
+### Market Rates (`market.html`)
 
-- Powered by the [Dog CEO API](https://dog.ceo/dog-api/)
-- Breed selector dropdown and image count input
-- Dynamic image grid with loading and error states
-- Favorite toggle on each card
-- Great for testing `select` elements, dynamic images, async content, and interactive cards
+- Powered by the [ExchangeRate API](https://www.exchangerate-api.com)
+- Base currency selector dropdown (USD, EUR, GBP, ZAR, etc.) and rate count input
+- Dynamic grid of currency rate cards with loading and error states
+- Each card shows currency code, name, rate value, and simulated % change
+- Bookmark toggle on each card
+- Great for testing `select` elements, dynamic content, async data, and interactive cards
 
-### Form Playground (`form.html`)
+### Payment (`payment.html`)
 
-- A comprehensive form with many input types:
-  - Text, email, password (with visibility toggle)
-  - Dropdown select, radio buttons, checkboxes
-  - Range slider with live value display
-  - Textarea with character count
-  - Toggle switch, terms checkbox
+- A comprehensive payment form with many input types:
+  - Recipient name, email, account PIN (with visibility toggle)
+  - Transaction type dropdown (Transfer, Payment, Deposit, Withdrawal)
+  - Priority radio buttons (Standard, Express, Instant)
+  - Category checkboxes (Bills, Savings, Investment, Personal)
+  - Amount slider ($0 - $10,000) with live value display
+  - Reference/notes textarea with character count
+  - Recurring payment toggle, terms checkbox
   - Submit, reset, and disabled buttons
 - Client-side validation with error messages
-- Displays submitted data as JSON on success
+- Displays submitted transaction data as JSON on success
 - Ideal for locator practice and form interaction testing
 
 ### Login (`login.html`)
@@ -88,7 +92,7 @@ The app lives in the `app/` directory and consists of five pages:
 - "Remember me" checkbox
 - Error messages on invalid credentials
 - On successful login, sets `localStorage`, `sessionStorage`, and cookies
-- Redirects to a **Dashboard** showing session info and stats fetched from JSONPlaceholder
+- Redirects to a **Financial Dashboard** showing balance, transactions, accounts, and savings stats
 - Navbar updates to show the logged-in user and a logout button
 - Perfect for testing auth flows, storage APIs, cookies, and conditional UI
 
@@ -98,9 +102,8 @@ The app lives in the `app/` directory and consists of five pages:
 
 | API | Used On | Purpose |
 |:----|:--------|:--------|
-| [Chuck Norris API](https://api.chucknorris.io) | Home | Random joke fetching |
-| [JSONPlaceholder](https://jsonplaceholder.typicode.com) | Todos, Login/Dashboard | Todos list, dashboard stats |
-| [Dog CEO API](https://dog.ceo/dog-api/) | Dogs | Breed list and random dog images |
+| [ExchangeRate API](https://www.exchangerate-api.com) | Home, Market | Live exchange rates and currency data |
+| [JSONPlaceholder](https://jsonplaceholder.typicode.com) | Transactions, Login/Dashboard | Transaction seed data, dashboard stats |
 
 ---
 
@@ -140,13 +143,13 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 Lab-3/
 ├── app/
-│   ├── index.html        # Home - counter & joke fetcher
-│   ├── todos.html         # Todo list with CRUD & filters
-│   ├── dogs.html          # Dog gallery with breed selector
-│   ├── form.html          # Form playground with many input types
-│   ├── login.html         # Login, auth flow & dashboard
-│   ├── app.js             # Shared navbar auth logic
-│   └── style.css          # Global styles
+│   ├── index.html          # Home - balance widget & exchange rate
+│   ├── transactions.html   # Transaction list with CRUD & filters
+│   ├── market.html         # Market rates with currency selector
+│   ├── payment.html        # Payment form with many input types
+│   ├── login.html          # Login, auth flow & financial dashboard
+│   ├── app.js              # Shared navbar auth logic
+│   └── style.css           # Global styles
 ├── package.json
 └── README.md
 ```

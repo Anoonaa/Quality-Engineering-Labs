@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - FinLab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="brand-text">FinLab</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Market</a></li>
+      <li><a href="payment.html" class="nav-link active" data-page="payment">Payment</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="send"></i> Send Payment</h1>
+      <p class="page-desc">A rich payment form with many input types - perfect for testing locators, assertions, and form interactions.</p>
+    </section>
+
+    <form id="payment-form" data-testid="payment-form" class="form-card" novalidate>
+      <!-- Recipient Name -->
+      <div class="form-group">
+        <label for="recipient">Recipient Name <span class="required">*</span></label>
+        <input type="text" id="recipient" name="recipient" data-testid="input-recipient" class="input" 
+               placeholder="Enter recipient's full name" required aria-required="true" />
+        <span class="form-error" data-testid="error-recipient" id="error-recipient"></span>
+      </div>
+
+      <!-- Recipient Email -->
+      <div class="form-group">
+        <label for="email">Recipient Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" data-testid="input-email" class="input" 
+               placeholder="recipient@example.com" required aria-required="true" />
+        <span class="form-error" data-testid="error-email" id="error-email"></span>
+      </div>
+
+      <!-- Account PIN -->
+      <div class="form-group">
+        <label for="pin">Account PIN</label>
+        <div class="input-icon-wrapper">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="pin" name="pin" data-testid="input-pin" class="input input-with-icon" 
+                 placeholder="Enter your PIN" />
+          <button type="button" class="btn-toggle-pw" data-testid="toggle-pin" id="toggle-pin" aria-label="Toggle PIN visibility">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Transaction Type -->
+      <div class="form-group">
+        <label for="txn-type">Transaction Type</label>
+        <select id="txn-type" name="transactionType" data-testid="select-txn-type" class="input select" aria-label="Select transaction type">
+          <option value="">-- Select type --</option>
+          <option value="transfer">Transfer</option>
+          <option value="payment">Payment</option>
+          <option value="deposit">Deposit</option>
+          <option value="withdrawal">Withdrawal</option>
+        </select>
+      </div>
+
+      <!-- Priority -->
+      <div class="form-group">
+        <label>Priority</label>
+        <div class="radio-group" data-testid="radio-priority">
+          <label class="radio-label">
+            <input type="radio" name="priority" value="standard" data-testid="radio-standard" /> Standard
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="priority" value="express" data-testid="radio-express" /> Express
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="priority" value="instant" data-testid="radio-instant" /> Instant
+          </label>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="form-group">
+        <label>Category</label>
+        <div class="checkbox-group" data-testid="checkbox-categories">
+          <label class="checkbox-label">
+            <input type="checkbox" name="category" value="bills" data-testid="check-bills" /> Bills
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="category" value="savings" data-testid="check-savings" /> Savings
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="category" value="investment" data-testid="check-investment" /> Investment
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="category" value="personal" data-testid="check-personal" /> Personal
+          </label>
+        </div>
+      </div>
+
+      <!-- Amount slider -->
+      <div class="form-group">
+        <label for="amount">Amount: $<span id="amount-value" data-testid="amount-value">500</span></label>
+        <input type="range" id="amount" name="amount" data-testid="input-amount" 
+               min="0" max="10000" value="500" step="50" class="range-input" />
+      </div>
+
+      <!-- Reference / Notes -->
+      <div class="form-group">
+        <label for="reference">Reference / Notes</label>
+        <textarea id="reference" name="reference" data-testid="input-reference" class="input textarea" 
+                  rows="4" placeholder="Add a payment reference or note..."></textarea>
+        <span class="char-count" data-testid="char-count" id="char-count">0 / 500</span>
+      </div>
+
+      <!-- Recurring toggle -->
+      <div class="form-group">
+        <label class="switch-label">
+          <span>Recurring Payment</span>
+          <div class="switch">
+            <input type="checkbox" id="recurring" name="recurring" data-testid="toggle-recurring" />
+            <span class="switch-slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Terms -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="terms" name="terms" data-testid="check-terms" required />
+          I agree to the <a href="#" data-testid="terms-link">Terms and Conditions</a>
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" data-testid="submit-btn">
+          <i data-lucide="send"></i> Send Payment
+        </button>
+        <button type="reset" class="btn btn-outline" data-testid="reset-btn">
+          <i data-lucide="rotate-ccw"></i> Reset
+        </button>
+        <button type="button" class="btn btn-outline" data-testid="schedule-btn" id="schedule-btn" disabled>
+          Schedule Later
+        </button>
+      </div>
+    </form>
+
+    <!-- Success message -->
+    <div class="success-message" data-testid="payment-success" id="payment-success" style="display:none;">
+      <i data-lucide="check-circle"></i>
+      <h3>Payment sent successfully!</h3>
+      <p>Your transaction has been processed.</p>
+    </div>
+
+    <!-- Submitted data preview -->
+    <div class="submitted-data" data-testid="submitted-data" id="submitted-data" style="display:none;">
+      <h3>Transaction Details</h3>
+      <pre data-testid="submitted-json" id="submitted-json"></pre>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Amount slider
+    const amountInput = document.getElementById('amount');
+    const amountValue = document.getElementById('amount-value');
+    amountInput.addEventListener('input', () => {
+      amountValue.textContent = parseFloat(amountInput.value).toLocaleString();
+    });
+
+    // Char count for reference
+    const refInput = document.getElementById('reference');
+    const charCount = document.getElementById('char-count');
+    refInput.addEventListener('input', () => {
+      charCount.textContent = `${refInput.value.length} / 500`;
+    });
+
+    // Toggle PIN visibility
+    document.getElementById('toggle-pin').addEventListener('click', () => {
+      const pin = document.getElementById('pin');
+      pin.type = pin.type === 'password' ? 'text' : 'password';
+    });
+
+    // Form submit
+    document.getElementById('payment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      // Validate recipient
+      const recipient = document.getElementById('recipient');
+      const recipientError = document.getElementById('error-recipient');
+      if (!recipient.value.trim()) {
+        recipientError.textContent = 'Recipient name is required';
+        valid = false;
+      } else {
+        recipientError.textContent = '';
+      }
+
+      // Validate email
+      const email = document.getElementById('email');
+      const emailError = document.getElementById('error-email');
+      if (!email.value.trim() || !email.value.includes('@')) {
+        emailError.textContent = 'Valid email is required';
+        valid = false;
+      } else {
+        emailError.textContent = '';
+      }
+
+      if (!valid) return;
+
+      // Collect data
+      const formData = new FormData(e.target);
+      const data = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          if (!Array.isArray(data[key])) data[key] = [data[key]];
+          data[key].push(value);
+        } else {
+          data[key] = value;
+        }
+      });
+
+      // Show success
+      document.getElementById('payment-form').style.display = 'none';
+      document.getElementById('payment-success').style.display = 'flex';
+      document.getElementById('submitted-data').style.display = 'block';
+      document.getElementById('submitted-json').textContent = JSON.stringify(data, null, 2);
+      lucide.createIcons();
+    });
+
+    // Reset handler
+    document.getElementById('payment-form').addEventListener('reset', () => {
+      document.getElementById('error-recipient').textContent = '';
+      document.getElementById('error-email').textContent = '';
+      document.getElementById('amount-value').textContent = '500';
+      document.getElementById('char-count').textContent = '0 / 500';
+    });
+  </script>
+</body>
+</html>
