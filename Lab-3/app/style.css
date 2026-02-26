@@ -18,6 +18,7 @@
   --warning-light: #fdf8ef;
   --radius: 8px;
   --radius-sm: 6px;
+  --radius-lg: 12px;
   --shadow: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-lg: 0 4px 12px rgba(0,0,0,0.06);
   --transition: 0.2s ease;
@@ -291,7 +292,7 @@ a:hover { color: var(--accent); }
 
 .about-code-block {
   background: #1e293b;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0,0,0,0.12);
 }
@@ -316,7 +317,7 @@ a:hover { color: var(--accent); }
 .code-dot--green { background: #22c55e; }
 
 .code-filename {
-  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 0.75rem;
   color: rgba(255,255,255,0.45);
   margin-left: 0.5rem;
@@ -377,7 +378,7 @@ a:hover { color: var(--accent); }
   flex-direction: column;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 1.75rem;
   text-decoration: none;
   color: var(--text);
@@ -395,7 +396,7 @@ a:hover { color: var(--accent); }
 .feature-icon {
   width: 52px;
   height: 52px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -439,7 +440,7 @@ a:hover { color: var(--accent); }
 .counter-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 2rem;
   max-width: 360px;
   margin: 0 auto;
@@ -1121,7 +1122,7 @@ a:hover { color: var(--accent); }
 .dash-card-icon {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
