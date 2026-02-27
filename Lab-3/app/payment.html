@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment - FinLab</title>
+  <title>Sell Product - MerchantHub</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="nav-brand">
-      <span class="brand-text">FinLab</span>
-    </div>
-    <ul class="nav-links">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+        <ul class="nav-links">
       <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link active" data-page="payment">Sell</a></li>
       <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
-      <li><a href="market.html" class="nav-link" data-page="market">Market</a></li>
-      <li><a href="payment.html" class="nav-link active" data-page="payment">Payment</a></li>
-      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
       <span id="nav-username" data-testid="nav-username"></span>
@@ -27,229 +30,396 @@
 
   <main class="container">
     <section class="page-header">
-      <h1 data-testid="page-title"><i data-lucide="send"></i> Send Payment</h1>
-      <p class="page-desc">A rich payment form with many input types - perfect for testing locators, assertions, and form interactions.</p>
+      <h1 data-testid="page-title"><i data-lucide="shopping-bag"></i> Sell Product</h1>
+      <p class="page-desc">Process an over-the-counter digital product sale. Enter customer details, select product, and generate a receipt. Commission is automatically earned and wallet is updated.</p>
     </section>
 
-    <form id="payment-form" data-testid="payment-form" class="form-card" novalidate>
-      <!-- Recipient Name -->
-      <div class="form-group">
-        <label for="recipient">Recipient Name <span class="required">*</span></label>
-        <input type="text" id="recipient" name="recipient" data-testid="input-recipient" class="input" 
-               placeholder="Enter recipient's full name" required aria-required="true" />
-        <span class="form-error" data-testid="error-recipient" id="error-recipient"></span>
-      </div>
+    <!-- Wallet Info Bar -->
+    <div class="wallet-bar" data-testid="sell-wallet-bar" id="sell-wallet-bar">
+      <span><i data-lucide="wallet"></i> Wallet: <strong data-testid="sell-wallet" id="sell-wallet">R0.00</strong></span>
+      <span class="wallet-bar-sep">|</span>
+      <span>Commission Rate: <strong>5%</strong></span>
+      <span class="wallet-bar-sep">|</span>
+      <span>Recent Sales: <strong data-testid="sell-recent-count" id="sell-recent-count">0</strong></span>
+    </div>
 
-      <!-- Recipient Email -->
+    <form id="sale-form" data-testid="sale-form" class="form-card" novalidate>
+      <!-- Customer Phone -->
       <div class="form-group">
-        <label for="email">Recipient Email <span class="required">*</span></label>
-        <input type="email" id="email" name="email" data-testid="input-email" class="input" 
-               placeholder="recipient@example.com" required aria-required="true" />
-        <span class="form-error" data-testid="error-email" id="error-email"></span>
-      </div>
-
-      <!-- Account PIN -->
-      <div class="form-group">
-        <label for="pin">Account PIN</label>
+        <label for="customer-phone">Customer Phone Number <span class="required">*</span></label>
         <div class="input-icon-wrapper">
-          <i data-lucide="lock" class="input-icon"></i>
-          <input type="password" id="pin" name="pin" data-testid="input-pin" class="input input-with-icon" 
-                 placeholder="Enter your PIN" />
-          <button type="button" class="btn-toggle-pw" data-testid="toggle-pin" id="toggle-pin" aria-label="Toggle PIN visibility">
-            <i data-lucide="eye"></i>
-          </button>
+          <i data-lucide="phone" class="input-icon"></i>
+          <input type="tel" id="customer-phone" name="customerPhone" data-testid="input-phone" class="input input-with-icon"
+                 placeholder="e.g. 072 123 4567" required />
         </div>
+        <span class="form-error" data-testid="error-phone" id="error-phone"></span>
       </div>
 
-      <!-- Transaction Type -->
+      <!-- Customer Name -->
       <div class="form-group">
-        <label for="txn-type">Transaction Type</label>
-        <select id="txn-type" name="transactionType" data-testid="select-txn-type" class="input select" aria-label="Select transaction type">
-          <option value="">-- Select type --</option>
-          <option value="transfer">Transfer</option>
-          <option value="payment">Payment</option>
-          <option value="deposit">Deposit</option>
-          <option value="withdrawal">Withdrawal</option>
+        <label for="customer-name">Customer Name</label>
+        <input type="text" id="customer-name" name="customerName" data-testid="input-customer-name" class="input"
+               placeholder="Optional — enter customer name" />
+      </div>
+
+      <!-- Product Type -->
+      <div class="form-group">
+        <label for="product-type">Product Type <span class="required">*</span></label>
+        <select id="product-type" name="productType" data-testid="select-product" class="input select">
+          <option value="">-- Select product --</option>
+          <option value="airtime">Airtime</option>
+          <option value="data">Data Bundle</option>
+          <option value="1voucher">1Voucher</option>
+          <option value="electricity">Prepaid Electricity</option>
+          <option value="gaming">Gaming Voucher</option>
+          <option value="entertainment">Entertainment Voucher</option>
+          <option value="account-payment">Account Payment</option>
+          <option value="cashout">Cash-Out</option>
+        </select>
+        <span class="form-error" data-testid="error-product" id="error-product"></span>
+      </div>
+
+      <!-- Provider -->
+      <div class="form-group" id="provider-group" style="display:none;">
+        <label for="provider">Network / Provider</label>
+        <select id="provider" name="provider" data-testid="select-provider" class="input select">
+          <option value="">-- Select provider --</option>
         </select>
       </div>
 
-      <!-- Priority -->
+      <!-- Meter Number -->
+      <div class="form-group" id="meter-group" style="display:none;">
+        <label for="meter-number">Meter Number <span class="required">*</span></label>
+        <input type="text" id="meter-number" name="meterNumber" data-testid="input-meter" class="input" placeholder="Enter prepaid meter number" />
+        <span class="form-error" data-testid="error-meter" id="error-meter"></span>
+      </div>
+
+      <!-- Account Number -->
+      <div class="form-group" id="account-group" style="display:none;">
+        <label for="account-number">Account / Reference Number <span class="required">*</span></label>
+        <input type="text" id="account-number" name="accountNumber" data-testid="input-account" class="input" placeholder="Enter account or reference number" />
+        <span class="form-error" data-testid="error-account" id="error-account"></span>
+      </div>
+
+      <!-- Merchant PIN -->
       <div class="form-group">
-        <label>Priority</label>
-        <div class="radio-group" data-testid="radio-priority">
-          <label class="radio-label">
-            <input type="radio" name="priority" value="standard" data-testid="radio-standard" /> Standard
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="priority" value="express" data-testid="radio-express" /> Express
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="priority" value="instant" data-testid="radio-instant" /> Instant
-          </label>
+        <label for="pin">Merchant PIN</label>
+        <div class="input-icon-wrapper">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="pin" name="pin" data-testid="input-pin" class="input input-with-icon" placeholder="Enter your merchant PIN" />
+          <button type="button" class="btn-toggle-pw" data-testid="toggle-pin" id="toggle-pin"><i data-lucide="eye"></i></button>
         </div>
       </div>
 
-      <!-- Categories -->
+      <!-- Amount Slider -->
       <div class="form-group">
-        <label>Category</label>
-        <div class="checkbox-group" data-testid="checkbox-categories">
-          <label class="checkbox-label">
-            <input type="checkbox" name="category" value="bills" data-testid="check-bills" /> Bills
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" name="category" value="savings" data-testid="check-savings" /> Savings
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" name="category" value="investment" data-testid="check-investment" /> Investment
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" name="category" value="personal" data-testid="check-personal" /> Personal
-          </label>
+        <label for="amount">Amount: R<span id="amount-value" data-testid="amount-value">50</span></label>
+        <input type="range" id="amount" name="amount" data-testid="input-amount" min="5" max="1000" value="50" step="5" class="range-input" />
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;">
+          <span>R5</span><span>R1,000</span>
         </div>
       </div>
 
-      <!-- Amount slider -->
+      <!-- Quick Amounts -->
       <div class="form-group">
-        <label for="amount">Amount: $<span id="amount-value" data-testid="amount-value">500</span></label>
-        <input type="range" id="amount" name="amount" data-testid="input-amount" 
-               min="0" max="10000" value="500" step="50" class="range-input" />
+        <label>Quick Select Amount</label>
+        <div class="quick-amounts" data-testid="quick-amounts">
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="5" data-testid="quick-R5">R5</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="10" data-testid="quick-R10">R10</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="29" data-testid="quick-R29">R29</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="50" data-testid="quick-R50">R50</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="100" data-testid="quick-R100">R100</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="200" data-testid="quick-R200">R200</button>
+          <button type="button" class="btn btn-outline btn-sm quick-amt" data-amount="500" data-testid="quick-R500">R500</button>
+        </div>
       </div>
 
-      <!-- Reference / Notes -->
+      <!-- Reference -->
       <div class="form-group">
         <label for="reference">Reference / Notes</label>
-        <textarea id="reference" name="reference" data-testid="input-reference" class="input textarea" 
-                  rows="4" placeholder="Add a payment reference or note..."></textarea>
+        <textarea id="reference" name="reference" data-testid="input-reference" class="input textarea" rows="3" placeholder="Add a transaction reference or note..."></textarea>
         <span class="char-count" data-testid="char-count" id="char-count">0 / 500</span>
-      </div>
-
-      <!-- Recurring toggle -->
-      <div class="form-group">
-        <label class="switch-label">
-          <span>Recurring Payment</span>
-          <div class="switch">
-            <input type="checkbox" id="recurring" name="recurring" data-testid="toggle-recurring" />
-            <span class="switch-slider"></span>
-          </div>
-        </label>
       </div>
 
       <!-- Terms -->
       <div class="form-group">
         <label class="checkbox-label">
           <input type="checkbox" id="terms" name="terms" data-testid="check-terms" required />
-          I agree to the <a href="#" data-testid="terms-link">Terms and Conditions</a>
+          I confirm this sale with the customer present
         </label>
+      </div>
+
+      <!-- Sale Summary Preview -->
+      <div class="sale-preview" data-testid="sale-preview" id="sale-preview">
+        <h4>Sale Summary</h4>
+        <div class="sale-preview-row"><span>Product:</span><span id="preview-product" data-testid="preview-product">—</span></div>
+        <div class="sale-preview-row"><span>Amount:</span><span id="preview-amount" data-testid="preview-amount">R50.00</span></div>
+        <div class="sale-preview-row"><span>Commission (5%):</span><span id="preview-commission" data-testid="preview-commission">R2.50</span></div>
       </div>
 
       <!-- Buttons -->
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" data-testid="submit-btn">
-          <i data-lucide="send"></i> Send Payment
+          <i data-lucide="check-circle"></i> Process Sale
         </button>
         <button type="reset" class="btn btn-outline" data-testid="reset-btn">
           <i data-lucide="rotate-ccw"></i> Reset
         </button>
-        <button type="button" class="btn btn-outline" data-testid="schedule-btn" id="schedule-btn" disabled>
-          Schedule Later
-        </button>
       </div>
     </form>
 
-    <!-- Success message -->
-    <div class="success-message" data-testid="payment-success" id="payment-success" style="display:none;">
+    <!-- Success Receipt -->
+    <div class="success-message" data-testid="sale-receipt" id="sale-receipt" style="display:none;">
       <i data-lucide="check-circle"></i>
-      <h3>Payment sent successfully!</h3>
-      <p>Your transaction has been processed.</p>
+      <h3>Sale Processed Successfully!</h3>
+      <p data-testid="receipt-summary" id="receipt-summary">Transaction completed and recorded.</p>
     </div>
 
-    <!-- Submitted data preview -->
-    <div class="submitted-data" data-testid="submitted-data" id="submitted-data" style="display:none;">
-      <h3>Transaction Details</h3>
-      <pre data-testid="submitted-json" id="submitted-json"></pre>
+    <!-- Receipt Details -->
+    <div class="submitted-data" data-testid="receipt-details" id="receipt-details" style="display:none;">
+      <h3><i data-lucide="receipt"></i> Sale Receipt</h3>
+      <div class="receipt-content" data-testid="receipt-content" id="receipt-content"></div>
+      <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+        <button class="btn btn-primary" data-testid="new-sale-btn" id="new-sale-btn"><i data-lucide="plus"></i> New Sale</button>
+        <button class="btn btn-outline" data-testid="print-receipt-btn" id="print-receipt-btn"><i data-lucide="printer"></i> Print Receipt</button>
+        <a href="transactions.html" class="btn btn-outline" data-testid="view-txns-btn"><i data-lucide="receipt"></i> View Transactions</a>
+      </div>
+    </div>
+
+    <!-- Recent Sales -->
+    <div class="recent-sales" data-testid="recent-sales" id="recent-sales-section">
+      <h3><i data-lucide="clock"></i> Recent Sales</h3>
+      <div id="recent-sales-list" data-testid="recent-sales-list" class="recent-sales-list"></div>
     </div>
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
   </footer>
 
+  <script src="db.js"></script>
   <script src="app.js"></script>
   <script>
-    // Amount slider
+    const providerOptions = {
+      'airtime': ['Vodacom', 'MTN', 'Telkom', 'Cell C', 'Eezi'],
+      'data': ['Vodacom', 'MTN', 'Telkom', 'Cell C', 'Eezi'],
+      'gaming': ['PlayStation', 'Steam', 'Roblox', 'Razer Gold', 'Free Fire'],
+      'entertainment': ['Showmax', 'Hollywoodbets', 'Betway', 'National Lottery'],
+      'account-payment': ['DSTV', 'Municipality', 'Insurance', 'Other'],
+      'cashout': ['FNB', 'Nedbank', 'Standard Bank', 'TymeBank', 'MTN MoMo']
+    };
+
+    const productType = document.getElementById('product-type');
+    const providerGroup = document.getElementById('provider-group');
+    const providerSelect = document.getElementById('provider');
+    const meterGroup = document.getElementById('meter-group');
+    const accountGroup = document.getElementById('account-group');
     const amountInput = document.getElementById('amount');
     const amountValue = document.getElementById('amount-value');
-    amountInput.addEventListener('input', () => {
-      amountValue.textContent = parseFloat(amountInput.value).toLocaleString();
-    });
-
-    // Char count for reference
     const refInput = document.getElementById('reference');
     const charCount = document.getElementById('char-count');
-    refInput.addEventListener('input', () => {
-      charCount.textContent = `${refInput.value.length} / 500`;
+
+    function updateUI() {
+      const wallet = FlashDB.getWallet().balance;
+      document.getElementById('sell-wallet').textContent = 'R' + wallet.toFixed(2);
+      const sales = FlashDB.getTransactions().filter(t => t.type === 'sale');
+      document.getElementById('sell-recent-count').textContent = sales.length;
+      renderRecentSales();
+    }
+
+    function updatePreview() {
+      const prod = productType.options[productType.selectedIndex];
+      document.getElementById('preview-product').textContent = prod.value ? prod.text : '—';
+      const amt = parseFloat(amountInput.value) || 0;
+      document.getElementById('preview-amount').textContent = 'R' + amt.toFixed(2);
+      document.getElementById('preview-commission').textContent = 'R' + (amt * 0.05).toFixed(2);
+    }
+
+    // Conditional fields
+    productType.addEventListener('change', () => {
+      const val = productType.value;
+      if (providerOptions[val]) {
+        providerGroup.style.display = 'block';
+        providerSelect.innerHTML = '<option value="">-- Select provider --</option>';
+        providerOptions[val].forEach(p => { providerSelect.innerHTML += '<option value="' + p + '">' + p + '</option>'; });
+      } else { providerGroup.style.display = 'none'; }
+      meterGroup.style.display = val === 'electricity' ? 'block' : 'none';
+      accountGroup.style.display = val === 'account-payment' ? 'block' : 'none';
+      updatePreview();
     });
 
-    // Toggle PIN visibility
+    // Slider
+    amountInput.addEventListener('input', () => {
+      amountValue.textContent = parseFloat(amountInput.value).toLocaleString();
+      updatePreview();
+    });
+
+    // Quick amounts
+    document.querySelectorAll('.quick-amt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        amountInput.value = btn.dataset.amount;
+        amountValue.textContent = parseInt(btn.dataset.amount).toLocaleString();
+        document.querySelectorAll('.quick-amt').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
+        btn.classList.remove('btn-outline'); btn.classList.add('btn-primary');
+        updatePreview();
+      });
+    });
+
+    // Char count
+    refInput.addEventListener('input', () => { charCount.textContent = refInput.value.length + ' / 500'; });
+
+    // Toggle PIN
     document.getElementById('toggle-pin').addEventListener('click', () => {
       const pin = document.getElementById('pin');
       pin.type = pin.type === 'password' ? 'text' : 'password';
     });
 
+    // Render recent sales from db
+    function renderRecentSales() {
+      const list = document.getElementById('recent-sales-list');
+      const txns = FlashDB.getTransactions().filter(t => t.type === 'sale').slice(0, 5);
+      if (txns.length === 0) {
+        list.innerHTML = '<p class="text-muted">No sales recorded yet.</p>';
+        return;
+      }
+      list.innerHTML = '';
+      txns.forEach(txn => {
+        const div = document.createElement('div');
+        div.className = 'recent-sale-item';
+        div.innerHTML =
+          '<span class="recent-sale-desc">' + (txn.description || 'Sale') + '</span>' +
+          '<span class="recent-sale-amount txn-amount-positive">+R' + (txn.amount || 0).toFixed(2) + '</span>' +
+          '<span class="recent-sale-time">' + (txn.timestamp ? new Date(txn.timestamp).toLocaleString('en-ZA', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '') + '</span>';
+        list.appendChild(div);
+      });
+    }
+
     // Form submit
-    document.getElementById('payment-form').addEventListener('submit', (e) => {
+    document.getElementById('sale-form').addEventListener('submit', (e) => {
       e.preventDefault();
       let valid = true;
 
-      // Validate recipient
-      const recipient = document.getElementById('recipient');
-      const recipientError = document.getElementById('error-recipient');
-      if (!recipient.value.trim()) {
-        recipientError.textContent = 'Recipient name is required';
+      // Validate phone
+      const phone = document.getElementById('customer-phone');
+      const phoneError = document.getElementById('error-phone');
+      const phoneVal = phone.value.replace(/\s/g, '');
+      if (!phoneVal || phoneVal.length < 10 || !/^0[67]\d{8}$/.test(phoneVal)) {
+        phoneError.textContent = 'Valid SA phone number required (e.g. 072 123 4567)';
         valid = false;
-      } else {
-        recipientError.textContent = '';
-      }
+      } else { phoneError.textContent = ''; }
 
-      // Validate email
-      const email = document.getElementById('email');
-      const emailError = document.getElementById('error-email');
-      if (!email.value.trim() || !email.value.includes('@')) {
-        emailError.textContent = 'Valid email is required';
+      // Validate product
+      const productError = document.getElementById('error-product');
+      if (!productType.value) {
+        productError.textContent = 'Please select a product type';
         valid = false;
-      } else {
-        emailError.textContent = '';
+      } else { productError.textContent = ''; }
+
+      // Validate meter
+      if (productType.value === 'electricity') {
+        const meter = document.getElementById('meter-number');
+        const meterError = document.getElementById('error-meter');
+        if (!meter.value.trim()) { meterError.textContent = 'Meter number is required'; valid = false; }
+        else { meterError.textContent = ''; }
+      }
+      // Validate account
+      if (productType.value === 'account-payment') {
+        const acct = document.getElementById('account-number');
+        const acctError = document.getElementById('error-account');
+        if (!acct.value.trim()) { acctError.textContent = 'Account number is required'; valid = false; }
+        else { acctError.textContent = ''; }
       }
 
       if (!valid) return;
 
-      // Collect data
-      const formData = new FormData(e.target);
-      const data = {};
-      formData.forEach((value, key) => {
-        if (data[key]) {
-          if (!Array.isArray(data[key])) data[key] = [data[key]];
-          data[key].push(value);
-        } else {
-          data[key] = value;
-        }
+      // Process sale through DB
+      const amount = parseFloat(amountInput.value);
+      const prodLabel = productType.options[productType.selectedIndex].text;
+
+      const result = FlashDB.sellProduct({
+        productType: productType.value,
+        productLabel: prodLabel,
+        provider: providerSelect.value || '',
+        customerPhone: phone.value,
+        customerName: document.getElementById('customer-name').value,
+        meterNumber: document.getElementById('meter-number') ? document.getElementById('meter-number').value : '',
+        accountNumber: document.getElementById('account-number') ? document.getElementById('account-number').value : '',
+        reference: refInput.value,
+        amount: amount,
       });
 
-      // Show success
-      document.getElementById('payment-form').style.display = 'none';
-      document.getElementById('payment-success').style.display = 'flex';
-      document.getElementById('submitted-data').style.display = 'block';
-      document.getElementById('submitted-json').textContent = JSON.stringify(data, null, 2);
+      if (!result.success) { alert(result.error || 'Sale failed'); return; }
+
+      // Build receipt HTML
+      const receipt = result.receipt;
+      const item = receipt.items[0];
+      const timestamp = new Date(receipt.timestamp).toLocaleString('en-ZA');
+
+      let receiptHtml =
+        '<div class="receipt-row"><strong>Transaction Ref:</strong> <span data-testid="receipt-ref">' + receipt.ref + '</span></div>' +
+        '<div class="receipt-row"><strong>Date & Time:</strong> <span data-testid="receipt-time">' + timestamp + '</span></div>' +
+        '<div class="receipt-row"><strong>Customer Phone:</strong> <span data-testid="receipt-phone">' + (receipt.customerPhone || '') + '</span></div>';
+
+      if (receipt.customerName) receiptHtml += '<div class="receipt-row"><strong>Customer:</strong> ' + receipt.customerName + '</div>';
+
+      receiptHtml +=
+        '<div class="receipt-row"><strong>Product:</strong> <span data-testid="receipt-product">' + prodLabel + '</span></div>' +
+        '<div class="receipt-row"><strong>Amount:</strong> <span data-testid="receipt-amount">R' + amount.toFixed(2) + '</span></div>';
+
+      if (item.provider) receiptHtml += '<div class="receipt-row"><strong>Provider:</strong> <span data-testid="receipt-provider">' + item.provider + '</span></div>';
+      if (item.voucherPin) receiptHtml += '<div class="receipt-row receipt-pin"><strong>Voucher PIN:</strong> <span data-testid="receipt-voucher-pin" class="voucher-pin">' + item.voucherPin + '</span></div>';
+      if (item.electricityToken) receiptHtml += '<div class="receipt-row receipt-pin"><strong>Electricity Token:</strong> <span data-testid="receipt-elec-token" class="voucher-pin">' + item.electricityToken + '</span></div>';
+
+      receiptHtml +=
+        '<div class="receipt-divider"></div>' +
+        '<div class="receipt-row"><strong>Commission Earned:</strong> <span class="txn-amount-positive" data-testid="receipt-commission">+R' + receipt.commission.toFixed(2) + '</span></div>' +
+        '<div class="receipt-row"><strong>New Wallet Balance:</strong> R' + FlashDB.getWallet().balance.toFixed(2) + '</div>' +
+        '<div class="receipt-row" style="margin-top:0.5rem;color:var(--success);font-weight:600;">Status: APPROVED ✓</div>';
+
+      // Show receipt
+      document.getElementById('receipt-summary').textContent = 'R' + amount.toFixed(2) + ' sale completed. Commission: R' + receipt.commission.toFixed(2) + ' earned.';
+      document.getElementById('sale-form').style.display = 'none';
+      document.getElementById('sale-receipt').style.display = 'flex';
+      document.getElementById('receipt-details').style.display = 'block';
+      document.getElementById('receipt-content').innerHTML = receiptHtml;
+      updateUI();
       lucide.createIcons();
     });
 
-    // Reset handler
-    document.getElementById('payment-form').addEventListener('reset', () => {
-      document.getElementById('error-recipient').textContent = '';
-      document.getElementById('error-email').textContent = '';
-      document.getElementById('amount-value').textContent = '500';
-      document.getElementById('char-count').textContent = '0 / 500';
+    // New Sale
+    document.getElementById('new-sale-btn').addEventListener('click', () => {
+      document.getElementById('sale-form').style.display = 'block';
+      document.getElementById('sale-receipt').style.display = 'none';
+      document.getElementById('receipt-details').style.display = 'none';
+      document.getElementById('sale-form').reset();
+      amountValue.textContent = '50';
+      charCount.textContent = '0 / 500';
+      providerGroup.style.display = 'none';
+      meterGroup.style.display = 'none';
+      accountGroup.style.display = 'none';
+      document.querySelectorAll('.quick-amt').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
+      updatePreview();
     });
+
+    // Print
+    document.getElementById('print-receipt-btn').addEventListener('click', () => { window.print(); });
+
+    // Reset handler
+    document.getElementById('sale-form').addEventListener('reset', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.form-error').forEach(e => e.textContent = '');
+        amountValue.textContent = '50';
+        charCount.textContent = '0 / 500';
+        providerGroup.style.display = 'none';
+        meterGroup.style.display = 'none';
+        accountGroup.style.display = 'none';
+        document.querySelectorAll('.quick-amt').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
+        updatePreview();
+      }, 10);
+    });
+
+    updatePreview();
+    updateUI();
   </script>
 </body>
 </html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - MerchantHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link active" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="bar-chart-3"></i> Business Analytics</h1>
+      <p class="page-desc">Visualise your merchant performance with real-time charts and insights drawn from your transaction and sales data.</p>
+    </section>
+
+    <!-- KPI Cards -->
+    <div class="analytics-kpi-grid" data-testid="kpi-grid">
+      <div class="kpi-card" data-testid="kpi-revenue">
+        <div class="kpi-icon" style="background:var(--success-light);color:var(--success);"><i data-lucide="trending-up"></i></div>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-revenue">R0.00</span>
+          <span class="kpi-label">Total Revenue</span>
+        </div>
+        <div class="kpi-trend kpi-trend-up" id="kpi-revenue-trend">
+          <i data-lucide="arrow-up-right"></i> <span>0%</span>
+        </div>
+      </div>
+      <div class="kpi-card" data-testid="kpi-orders">
+        <div class="kpi-icon" style="background:var(--primary-light);color:var(--primary);"><i data-lucide="shopping-bag"></i></div>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-orders">0</span>
+          <span class="kpi-label">Total Orders</span>
+        </div>
+        <div class="kpi-trend kpi-trend-up" id="kpi-orders-trend">
+          <i data-lucide="arrow-up-right"></i> <span>0%</span>
+        </div>
+      </div>
+      <div class="kpi-card" data-testid="kpi-avg-order">
+        <div class="kpi-icon" style="background:var(--warning-light);color:var(--warning);"><i data-lucide="calculator"></i></div>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-avg">R0.00</span>
+          <span class="kpi-label">Avg Order Value</span>
+        </div>
+        <div class="kpi-trend" id="kpi-avg-trend">
+          <i data-lucide="minus"></i> <span>—</span>
+        </div>
+      </div>
+      <div class="kpi-card" data-testid="kpi-customers">
+        <div class="kpi-icon" style="background:var(--danger-light);color:var(--danger);"><i data-lucide="users"></i></div>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-customers">0</span>
+          <span class="kpi-label">Customers</span>
+        </div>
+        <div class="kpi-trend kpi-trend-up" id="kpi-cust-trend">
+          <i data-lucide="arrow-up-right"></i> <span>Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="analytics-charts-row" data-testid="charts-row-1">
+      <div class="chart-card chart-card-lg" data-testid="chart-revenue">
+        <div class="chart-card-header">
+          <h3><i data-lucide="line-chart"></i> Revenue Over Time</h3>
+          <div class="chart-period-selector" data-testid="period-selector">
+            <button class="btn btn-sm btn-filter active" data-period="7d">7 Days</button>
+            <button class="btn btn-sm btn-filter" data-period="30d">30 Days</button>
+            <button class="btn btn-sm btn-filter" data-period="all">All Time</button>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="revenueChart" data-testid="revenue-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card chart-card-sm" data-testid="chart-categories">
+        <div class="chart-card-header">
+          <h3><i data-lucide="pie-chart"></i> Sales by Category</h3>
+        </div>
+        <div class="chart-canvas-wrap chart-canvas-square">
+          <canvas id="categoryChart" data-testid="category-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="analytics-charts-row" data-testid="charts-row-2">
+      <div class="chart-card chart-card-sm" data-testid="chart-providers">
+        <div class="chart-card-header">
+          <h3><i data-lucide="building-2"></i> Top Providers</h3>
+        </div>
+        <div class="chart-canvas-wrap chart-canvas-square">
+          <canvas id="providerChart" data-testid="provider-chart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card chart-card-lg" data-testid="chart-hourly">
+        <div class="chart-card-header">
+          <h3><i data-lucide="clock"></i> Sales by Hour of Day</h3>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="hourlyChart" data-testid="hourly-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Products Table -->
+    <div class="chart-card" data-testid="top-products" style="margin-bottom:2rem;">
+      <div class="chart-card-header">
+        <h3><i data-lucide="trophy"></i> Top Selling Products</h3>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" data-testid="top-products-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Revenue</th>
+              <th>Units Sold</th>
+              <th>Share</th>
+            </tr>
+          </thead>
+          <tbody id="top-products-body" data-testid="top-products-body"></tbody>
+        </table>
+        <div class="empty-table" id="top-products-empty" data-testid="top-products-empty" style="display:none;">
+          <i data-lucide="inbox"></i>
+          <p>No sales data yet. Start selling from the <a href="payment.html">Sell</a> page!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Exchange Rates Widget -->
+    <div class="chart-card" data-testid="live-rates" style="margin-bottom:2rem;">
+      <div class="chart-card-header">
+        <h3><i data-lucide="globe"></i> Live Exchange Rates (ZAR)</h3>
+        <button class="btn btn-sm btn-outline" id="refresh-rates" data-testid="refresh-rates">
+          <i data-lucide="refresh-cw"></i> Refresh
+        </button>
+      </div>
+      <div class="rates-grid" id="rates-grid" data-testid="rates-grid">
+        <div class="rate-tile rate-loading-placeholder"><div class="rate-shimmer"></div></div>
+        <div class="rate-tile rate-loading-placeholder"><div class="rate-shimmer"></div></div>
+        <div class="rate-tile rate-loading-placeholder"><div class="rate-shimmer"></div></div>
+        <div class="rate-tile rate-loading-placeholder"><div class="rate-shimmer"></div></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ===== KPI CARDS =====
+    function refreshKPIs() {
+      const txns = FlashDB.getTransactions();
+      const sales = txns.filter(t => t.type === 'sale');
+      const revenue = sales.reduce((s, t) => s + (t.amount || 0), 0);
+      const customers = FlashDB.getCustomers();
+
+      document.getElementById('kpi-revenue').textContent = 'R' + revenue.toLocaleString('en-ZA', { minimumFractionDigits: 2 });
+      document.getElementById('kpi-orders').textContent = sales.length;
+      document.getElementById('kpi-avg').textContent = sales.length > 0
+        ? 'R' + (revenue / sales.length).toFixed(2)
+        : 'R0.00';
+      document.getElementById('kpi-customers').textContent = customers.length;
+    }
+
+    // ===== REVENUE CHART =====
+    let revenueChart;
+    function buildRevenueChart(period) {
+      const txns = FlashDB.getTransactions().filter(t => t.type === 'sale');
+      const now = new Date();
+      let labels = [], data = [];
+
+      if (period === '7d' || period === '30d') {
+        const days = period === '7d' ? 7 : 30;
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(now); d.setDate(d.getDate() - i);
+          const key = d.toISOString().slice(0, 10);
+          labels.push(d.toLocaleDateString('en-ZA', { day: '2-digit', month: 'short' }));
+          const dayTotal = txns.filter(t => t.timestamp && t.timestamp.slice(0, 10) === key)
+            .reduce((s, t) => s + (t.amount || 0), 0);
+          data.push(dayTotal);
+        }
+      } else {
+        // group by month
+        const grouped = {};
+        txns.forEach(t => {
+          const m = (t.timestamp || '').slice(0, 7);
+          if (m) grouped[m] = (grouped[m] || 0) + (t.amount || 0);
+        });
+        const keys = Object.keys(grouped).sort();
+        if (keys.length === 0) {
+          const m = now.toISOString().slice(0, 7);
+          keys.push(m);
+          grouped[m] = 0;
+        }
+        keys.forEach(k => {
+          labels.push(k);
+          data.push(grouped[k]);
+        });
+      }
+
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      if (revenueChart) revenueChart.destroy();
+      revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue (R)',
+            data,
+            borderColor: '#c9a96e',
+            backgroundColor: 'rgba(201,169,110,0.1)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 3,
+            pointBackgroundColor: '#c9a96e',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => 'R' + v } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // ===== CATEGORY PIE CHART =====
+    let categoryChart;
+    function buildCategoryChart() {
+      const txns = FlashDB.getTransactions().filter(t => t.type === 'sale');
+      const grouped = {};
+      txns.forEach(t => {
+        const cat = t.category || 'other';
+        grouped[cat] = (grouped[cat] || 0) + (t.amount || 0);
+      });
+      const labels = Object.keys(grouped);
+      const data = Object.values(grouped);
+      const colors = ['#2563eb', '#7c3aed', '#c9a96e', '#d97706', '#dc2626', '#059669', '#0891b2', '#6b7280'];
+
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+      if (categoryChart) categoryChart.destroy();
+      categoryChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels.map(l => l.charAt(0).toUpperCase() + l.slice(1)),
+          datasets: [{ data, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    // ===== PROVIDER BAR CHART =====
+    let providerChart;
+    function buildProviderChart() {
+      const txns = FlashDB.getTransactions().filter(t => t.type === 'sale');
+      const receipts = FlashDB.getReceipts();
+      const providerRevenue = {};
+      receipts.forEach(r => {
+        (r.items || []).forEach(item => {
+          const p = item.provider || 'Unknown';
+          providerRevenue[p] = (providerRevenue[p] || 0) + (item.lineTotal || 0);
+        });
+      });
+      const sorted = Object.entries(providerRevenue).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const labels = sorted.map(s => s[0]);
+      const data = sorted.map(s => s[1]);
+
+      const ctx = document.getElementById('providerChart').getContext('2d');
+      if (providerChart) providerChart.destroy();
+      providerChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue (R)',
+            data,
+            backgroundColor: 'rgba(201,169,110,0.7)',
+            borderColor: '#c9a96e',
+            borderWidth: 1,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, ticks: { callback: v => 'R' + v } },
+            y: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // ===== HOURLY CHART =====
+    let hourlyChart;
+    function buildHourlyChart() {
+      const txns = FlashDB.getTransactions().filter(t => t.type === 'sale');
+      const hourCounts = new Array(24).fill(0);
+      txns.forEach(t => {
+        if (t.timestamp) {
+          const h = new Date(t.timestamp).getHours();
+          hourCounts[h] += (t.amount || 0);
+        }
+      });
+      const labels = Array.from({ length: 24 }, (_, i) => (i < 10 ? '0' : '') + i + ':00');
+
+      const ctx = document.getElementById('hourlyChart').getContext('2d');
+      if (hourlyChart) hourlyChart.destroy();
+      hourlyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue (R)',
+            data: hourCounts,
+            backgroundColor: 'rgba(26,26,26,0.7)',
+            borderColor: '#1a1a1a',
+            borderWidth: 1,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => 'R' + v } },
+            x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // ===== TOP PRODUCTS TABLE =====
+    function renderTopProducts() {
+      const receipts = FlashDB.getReceipts();
+      const productMap = {};
+      receipts.forEach(r => {
+        (r.items || []).forEach(item => {
+          const key = item.name || 'Unknown';
+          if (!productMap[key]) productMap[key] = { name: key, category: item.category || '', revenue: 0, units: 0 };
+          productMap[key].revenue += (item.lineTotal || item.unitPrice || 0);
+          productMap[key].units += (item.qty || 1);
+        });
+      });
+      const sorted = Object.values(productMap).sort((a, b) => b.revenue - a.revenue).slice(0, 10);
+      const totalRev = sorted.reduce((s, p) => s + p.revenue, 0);
+
+      const body = document.getElementById('top-products-body');
+      const empty = document.getElementById('top-products-empty');
+
+      if (sorted.length === 0) {
+        body.innerHTML = '';
+        empty.style.display = 'flex';
+        return;
+      }
+      empty.style.display = 'none';
+      body.innerHTML = sorted.map((p, i) => {
+        const share = totalRev > 0 ? ((p.revenue / totalRev) * 100).toFixed(1) : 0;
+        return '<tr data-testid="top-prod-row-' + i + '">' +
+          '<td>' + (i + 1) + '</td>' +
+          '<td><strong>' + p.name + '</strong></td>' +
+          '<td><span class="txn-tag" style="background:var(--primary-light);">' + (p.category || '—') + '</span></td>' +
+          '<td class="text-right">R' + p.revenue.toFixed(2) + '</td>' +
+          '<td class="text-right">' + p.units + '</td>' +
+          '<td><div class="share-bar"><div class="share-bar-fill" style="width:' + share + '%;"></div><span>' + share + '%</span></div></td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    // ===== LIVE EXCHANGE RATES =====
+    const RATE_CURRENCIES = [
+      { code: 'USD', name: 'US Dollar', flag: '🇺🇸' },
+      { code: 'EUR', name: 'Euro', flag: '🇪🇺' },
+      { code: 'GBP', name: 'British Pound', flag: '🇬🇧' },
+      { code: 'BTC', name: 'Bitcoin', flag: '₿' },
+    ];
+
+    async function fetchRates() {
+      const grid = document.getElementById('rates-grid');
+      grid.innerHTML = RATE_CURRENCIES.map(() =>
+        '<div class="rate-tile rate-loading-placeholder"><div class="rate-shimmer"></div></div>'
+      ).join('');
+
+      try {
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZAR');
+        const data = await res.json();
+
+        grid.innerHTML = RATE_CURRENCIES.map(c => {
+          if (c.code === 'BTC') {
+            // BTC from CoinGecko
+            return '<div class="rate-tile" data-testid="rate-' + c.code + '">' +
+              '<span class="rate-flag">' + c.flag + '</span>' +
+              '<div class="rate-info">' +
+                '<span class="rate-code">' + c.code + '/ZAR</span>' +
+                '<span class="rate-name">' + c.name + '</span>' +
+              '</div>' +
+              '<span class="rate-value" id="rate-btc">Loading...</span>' +
+            '</div>';
+          }
+          const rate = data.rates[c.code];
+          const zarPer = rate ? (1 / rate).toFixed(2) : '—';
+          return '<div class="rate-tile" data-testid="rate-' + c.code + '">' +
+            '<span class="rate-flag">' + c.flag + '</span>' +
+            '<div class="rate-info">' +
+              '<span class="rate-code">' + c.code + '/ZAR</span>' +
+              '<span class="rate-name">' + c.name + '</span>' +
+            '</div>' +
+            '<span class="rate-value">R' + zarPer + '</span>' +
+          '</div>';
+        }).join('');
+
+        // Fetch BTC separately
+        try {
+          const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=zar');
+          const btcData = await btcRes.json();
+          const btcEl = document.getElementById('rate-btc');
+          if (btcEl) btcEl.textContent = 'R' + (btcData.bitcoin.zar || 0).toLocaleString('en-ZA');
+        } catch { const btcEl = document.getElementById('rate-btc'); if (btcEl) btcEl.textContent = 'Unavailable'; }
+
+      } catch {
+        grid.innerHTML = '<div class="rate-tile"><span class="text-muted">Failed to load rates. Try again.</span></div>';
+      }
+
+      lucide.createIcons();
+    }
+
+    // ===== PERIOD SELECTOR =====
+    document.querySelectorAll('[data-period]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        buildRevenueChart(btn.dataset.period);
+      });
+    });
+
+    document.getElementById('refresh-rates').addEventListener('click', fetchRates);
+
+    // ===== INITIALIZE =====
+    refreshKPIs();
+    buildRevenueChart('7d');
+    buildCategoryChart();
+    buildProviderChart();
+    buildHourlyChart();
+    renderTopProducts();
+    fetchRates();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

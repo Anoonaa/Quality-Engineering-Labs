@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Market - FinLab</title>
+  <title>Products - MerchantHub</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="nav-brand">
-      <span class="brand-text">FinLab</span>
-    </div>
-    <ul class="nav-links">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+        <ul class="nav-links">
       <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link active" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
       <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
-      <li><a href="market.html" class="nav-link active" data-page="market">Market</a></li>
-      <li><a href="payment.html" class="nav-link" data-page="payment">Payment</a></li>
-      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
       <span id="nav-username" data-testid="nav-username"></span>
@@ -27,135 +30,456 @@
 
   <main class="container">
     <section class="page-header">
-      <h1 data-testid="page-title"><i data-lucide="trending-up"></i> Market Rates</h1>
-      <p class="page-desc">Live exchange rates powered by <a href="https://www.exchangerate-api.com" target="_blank">ExchangeRate API</a>. Great for testing dynamic content, loading states, and async data.</p>
+      <h1 data-testid="page-title"><i data-lucide="package"></i> Product Catalog</h1>
+      <p class="page-desc">Browse and purchase digital products. Add items to cart, adjust quantities, and check out — wallet balance is deducted and transactions are recorded.</p>
     </section>
+
+    <!-- Wallet Bar -->
+    <div class="wallet-bar" data-testid="wallet-bar" id="wallet-bar">
+      <span><i data-lucide="wallet"></i> Wallet: <strong data-testid="market-wallet" id="market-wallet">R0.00</strong></span>
+      <span class="wallet-bar-sep">|</span>
+      <span>Cart: <strong data-testid="header-cart-count" id="header-cart-count">0</strong> items — <strong data-testid="header-cart-total" id="header-cart-total">R0.00</strong></span>
+    </div>
 
     <!-- Controls -->
     <div class="dog-controls">
       <div class="select-wrapper">
-        <label for="base-currency">Base Currency:</label>
-        <select id="base-currency" data-testid="base-currency" class="input select" aria-label="Select base currency">
-          <option value="USD">USD - US Dollar</option>
-          <option value="EUR">EUR - Euro</option>
-          <option value="GBP">GBP - British Pound</option>
-          <option value="JPY">JPY - Japanese Yen</option>
-          <option value="ZAR">ZAR - South African Rand</option>
-          <option value="AUD">AUD - Australian Dollar</option>
-          <option value="CAD">CAD - Canadian Dollar</option>
-          <option value="CHF">CHF - Swiss Franc</option>
+        <label for="product-category">Category:</label>
+        <select id="product-category" data-testid="product-category" class="input select">
+          <option value="all">All Products</option>
+          <option value="airtime">Airtime</option>
+          <option value="data">Data Bundles</option>
+          <option value="1voucher">1Voucher</option>
+          <option value="electricity">Electricity</option>
+          <option value="gaming">Gaming Vouchers</option>
+          <option value="entertainment">Entertainment</option>
+        </select>
+      </div>
+      <div class="select-wrapper">
+        <label for="product-sort">Sort:</label>
+        <select id="product-sort" data-testid="product-sort" class="input select">
+          <option value="name">Name A-Z</option>
+          <option value="price-asc">Price Low-High</option>
+          <option value="price-desc">Price High-Low</option>
+          <option value="stock">Stock (High)</option>
         </select>
       </div>
       <div class="count-wrapper">
-        <label for="rate-count">Show:</label>
-        <input type="number" id="rate-count" data-testid="rate-count" class="input" value="6" min="1" max="20" aria-label="Number of rates to display" />
+        <label for="search-input">Search:</label>
+        <input type="text" id="search-input" data-testid="search-input" class="input" placeholder="Search products..." />
       </div>
-      <button class="btn btn-primary" data-testid="fetch-rates-btn" id="fetch-rates-btn">
-        <i data-lucide="refresh-cw"></i> Fetch Rates
-      </button>
     </div>
 
-    <!-- Loading -->
-    <div class="loading-state" data-testid="rates-loading" id="rates-loading" style="display:none;">
-      <i data-lucide="loader" class="spin"></i> Fetching exchange rates...
+    <!-- Product Grid -->
+    <div class="market-grid" data-testid="products-grid" id="products-grid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" data-testid="empty-state" id="empty-state" style="display:none;">
+      <i data-lucide="search-x"></i>
+      <p>No products match your filters.</p>
     </div>
 
-    <!-- Rate Cards -->
-    <div class="market-grid" data-testid="rates-grid" id="rates-grid"></div>
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay" data-testid="cart-overlay" style="display:none;" aria-hidden="true"></div>
+    <aside class="cart-drawer" id="cart-drawer" data-testid="cart-drawer" aria-label="Shopping cart">
+      <div class="cart-drawer-header">
+        <h2><i data-lucide="shopping-cart"></i> Your Cart</h2>
+        <button class="btn btn-icon" id="close-cart" data-testid="close-cart" aria-label="Close cart"><i data-lucide="x"></i></button>
+      </div>
+      <div class="cart-drawer-body" id="cart-items" data-testid="cart-items"></div>
+      <div class="cart-drawer-footer" id="cart-footer">
+        <div class="cart-totals">
+          <div class="cart-total-row"><span>Items:</span><span data-testid="cart-item-count" id="cart-item-count">0</span></div>
+          <div class="cart-total-row cart-total-main"><span>Total:</span><span data-testid="cart-total" id="cart-total">R0.00</span></div>
+          <div class="cart-total-row"><span>Wallet:</span><span data-testid="cart-wallet" id="cart-wallet">R0.00</span></div>
+        </div>
+        <button class="btn btn-primary btn-full" data-testid="checkout-btn" id="checkout-btn" disabled>
+          <i data-lucide="credit-card"></i> Checkout
+        </button>
+        <button class="btn btn-outline btn-full" data-testid="clear-cart-btn" id="clear-cart-btn" style="margin-top:0.5rem;">
+          <i data-lucide="trash-2"></i> Clear Cart
+        </button>
+      </div>
+    </aside>
 
-    <!-- Error -->
-    <div class="error-state" data-testid="rates-error" id="rates-error" style="display:none;">
-      <i data-lucide="alert-triangle"></i>
-      <p>Failed to load rates. Please try again.</p>
+    <!-- Floating Cart Button -->
+    <button class="fab-cart" id="fab-cart" data-testid="fab-cart" aria-label="Open cart" style="display:none;">
+      <i data-lucide="shopping-cart"></i>
+      <span class="fab-cart-badge" id="fab-badge" data-testid="fab-badge">0</span>
+    </button>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkout-modal" data-testid="checkout-modal" style="display:none;">
+      <div class="modal-card">
+        <!-- Step 1: Review -->
+        <div id="checkout-step-review" data-testid="checkout-step-review">
+          <h2><i data-lucide="clipboard-list"></i> Review Order</h2>
+          <div id="checkout-items" data-testid="checkout-items" class="checkout-items-list"></div>
+          <div class="checkout-summary">
+            <div class="cart-total-row cart-total-main"><span>Order Total:</span><span data-testid="checkout-total" id="checkout-total">R0.00</span></div>
+            <div class="cart-total-row"><span>Your Wallet:</span><span data-testid="checkout-wallet" id="checkout-wallet">R0.00</span></div>
+            <div class="cart-total-row"><span>After Payment:</span><span data-testid="checkout-remaining" id="checkout-remaining">R0.00</span></div>
+          </div>
+          <div class="checkout-warning" id="checkout-warning" data-testid="checkout-warning" style="display:none;"></div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" data-testid="confirm-checkout-btn" id="confirm-checkout-btn"><i data-lucide="check-circle"></i> Confirm & Pay</button>
+            <button class="btn btn-outline" data-testid="cancel-checkout-btn" id="cancel-checkout-btn">Cancel</button>
+          </div>
+        </div>
+        <!-- Step 2: Receipt -->
+        <div id="checkout-step-receipt" data-testid="checkout-step-receipt" style="display:none;">
+          <div class="checkout-success-icon"><i data-lucide="check-circle"></i></div>
+          <h2>Purchase Complete!</h2>
+          <p class="checkout-success-sub" data-testid="checkout-success-msg" id="checkout-success-msg"></p>
+          <div id="checkout-receipt" data-testid="checkout-receipt" class="checkout-receipt-block"></div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" data-testid="continue-shopping-btn" id="continue-shopping-btn"><i data-lucide="arrow-left"></i> Continue Shopping</button>
+            <button class="btn btn-outline" data-testid="print-order-btn" id="print-order-btn"><i data-lucide="printer"></i> Print</button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
   </footer>
 
+  <script src="db.js"></script>
   <script src="app.js"></script>
   <script>
-    const baseCurrency = document.getElementById('base-currency');
-    const rateCountInput = document.getElementById('rate-count');
-    const ratesGrid = document.getElementById('rates-grid');
-    const loading = document.getElementById('rates-loading');
-    const errorState = document.getElementById('rates-error');
+    const categorySelect = document.getElementById('product-category');
+    const sortSelect = document.getElementById('product-sort');
+    const searchInput = document.getElementById('search-input');
+    const productsGrid = document.getElementById('products-grid');
+    const emptyState = document.getElementById('empty-state');
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartItemsEl = document.getElementById('cart-items');
+    const fabCart = document.getElementById('fab-cart');
+    const fabBadge = document.getElementById('fab-badge');
 
-    const currencyNames = {
-      USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', JPY: 'Japanese Yen',
-      ZAR: 'South African Rand', AUD: 'Australian Dollar', CAD: 'Canadian Dollar',
-      CHF: 'Swiss Franc', CNY: 'Chinese Yuan', INR: 'Indian Rupee', BRL: 'Brazilian Real',
-      MXN: 'Mexican Peso', KRW: 'South Korean Won', SEK: 'Swedish Krona',
-      NZD: 'New Zealand Dollar', SGD: 'Singapore Dollar', HKD: 'Hong Kong Dollar',
-      NOK: 'Norwegian Krone', TRY: 'Turkish Lira', RUB: 'Russian Ruble',
-      PLN: 'Polish Zloty', THB: 'Thai Baht', IDR: 'Indonesian Rupiah',
-      DKK: 'Danish Krone', MYR: 'Malaysian Ringgit', PHP: 'Philippine Peso',
-      CZK: 'Czech Koruna', ILS: 'Israeli Shekel', CLP: 'Chilean Peso',
-      ARS: 'Argentine Peso', EGP: 'Egyptian Pound', NGN: 'Nigerian Naira',
-      KES: 'Kenyan Shilling', GHS: 'Ghanaian Cedi'
+    const categoryIcons = {
+      'airtime': 'phone', 'data': 'wifi', '1voucher': 'ticket',
+      'electricity': 'zap', 'gaming': 'gamepad-2', 'entertainment': 'tv'
+    };
+    const categoryColors = {
+      'airtime': '#2563eb', 'data': '#7c3aed', '1voucher': '#c9a96e',
+      'electricity': '#d97706', 'gaming': '#dc2626', 'entertainment': '#059669'
     };
 
-    async function fetchRates() {
-      const base = baseCurrency.value;
-      const count = Math.min(Math.max(parseInt(rateCountInput.value) || 6, 1), 20);
+    // ===== RENDER PRODUCTS =====
+    function renderProducts() {
+      const category = categorySelect.value;
+      const sort = sortSelect.value;
+      const search = searchInput.value.toLowerCase().trim();
 
-      ratesGrid.innerHTML = '';
-      errorState.style.display = 'none';
-      loading.style.display = 'flex';
+      let products = FlashDB.getProducts();
 
-      try {
-        const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${base}`);
-        const data = await res.json();
+      // Filter
+      if (category !== 'all') products = products.filter(p => p.category === category);
+      if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || p.provider.toLowerCase().includes(search));
 
-        if (data.rates) {
-          const entries = Object.entries(data.rates)
-            .filter(([code]) => code !== base)
-            .slice(0, count);
+      // Sort
+      if (sort === 'name') products.sort((a, b) => a.name.localeCompare(b.name));
+      else if (sort === 'price-asc') products.sort((a, b) => a.price - b.price);
+      else if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
+      else if (sort === 'stock') products.sort((a, b) => b.stock - a.stock);
 
-          entries.forEach(([code, rate], i) => {
-            const card = document.createElement('div');
-            card.className = 'rate-card';
-            card.setAttribute('data-testid', `rate-card-${i}`);
+      productsGrid.innerHTML = '';
 
-            const change = (Math.random() * 4 - 2).toFixed(2);
-            const isPositive = parseFloat(change) >= 0;
-
-            card.innerHTML = `
-              <div class="rate-card-header">
-                <span class="rate-currency-code" data-testid="rate-code-${i}">${code}</span>
-                <button class="btn btn-icon rate-bookmark" data-testid="bookmark-btn-${i}" aria-label="Bookmark ${code}">
-                  <i data-lucide="star"></i>
-                </button>
-              </div>
-              <div class="rate-currency-name" data-testid="rate-name-${i}">${currencyNames[code] || code}</div>
-              <div class="rate-value" data-testid="rate-value-${i}">${rate.toFixed(4)}</div>
-              <div class="rate-change ${isPositive ? 'rate-change-up' : 'rate-change-down'}" data-testid="rate-change-${i}">
-                <i data-lucide="${isPositive ? 'trending-up' : 'trending-down'}"></i>
-                ${isPositive ? '+' : ''}${change}%
-              </div>
-            `;
-
-            card.querySelector('.rate-bookmark').addEventListener('click', (e) => {
-              e.currentTarget.classList.toggle('active');
-            });
-
-            ratesGrid.appendChild(card);
-          });
-
-          lucide.createIcons();
-        } else {
-          throw new Error('API error');
-        }
-      } catch (e) {
-        errorState.style.display = 'flex';
+      if (products.length === 0) {
+        emptyState.style.display = 'flex';
+        return;
       }
+      emptyState.style.display = 'none';
 
-      loading.style.display = 'none';
+      const cart = FlashDB.getCart();
+
+      products.forEach((product, i) => {
+        const icon = categoryIcons[product.category] || 'package';
+        const color = categoryColors[product.category] || '#6b7280';
+        const inCart = cart.find(c => c.productId === product.id);
+        const outOfStock = product.stock <= 0;
+
+        const card = document.createElement('div');
+        card.className = 'product-card' + (outOfStock ? ' out-of-stock' : '');
+        card.setAttribute('data-testid', 'product-card-' + i);
+
+        card.innerHTML =
+          '<div class="product-card-img">' +
+            '<img src="' + product.image + '" alt="' + product.provider + '" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(product.provider) + '&background=' + color.replace('#','') + '&color=fff&size=64\'" />' +
+            '<span class="product-card-badge" style="background:' + color + ';">' + product.category.replace('-', ' ') + '</span>' +
+          '</div>' +
+          '<div class="product-card-body">' +
+            '<h3 class="product-card-name" data-testid="product-name-' + i + '">' + product.name + '</h3>' +
+            '<p class="product-card-provider" data-testid="product-provider-' + i + '">' + product.provider + '</p>' +
+            '<div class="product-card-meta">' +
+              '<span class="product-card-price" data-testid="product-price-' + i + '">R' + product.price.toFixed(2) + '</span>' +
+              '<span class="product-card-stock ' + (product.stock < 5 ? 'low-stock' : '') + '" data-testid="product-stock-' + i + '">' +
+                (outOfStock ? 'Out of stock' : product.stock + ' in stock') +
+              '</span>' +
+            '</div>' +
+            '<div class="product-card-actions">' +
+              (inCart
+                ? '<div class="qty-control" data-testid="qty-control-' + i + '">' +
+                    '<button class="btn btn-icon btn-sm qty-minus" data-id="' + product.id + '" data-testid="qty-minus-' + i + '"><i data-lucide="minus"></i></button>' +
+                    '<span class="qty-value" data-testid="qty-value-' + i + '">' + inCart.qty + '</span>' +
+                    '<button class="btn btn-icon btn-sm qty-plus" data-id="' + product.id + '" data-testid="qty-plus-' + i + '"><i data-lucide="plus"></i></button>' +
+                  '</div>'
+                : '<button class="btn btn-primary btn-sm add-to-cart-btn" data-id="' + product.id + '" data-testid="add-cart-' + i + '"' + (outOfStock ? ' disabled' : '') + '>' +
+                    '<i data-lucide="shopping-cart"></i> Add to Cart' +
+                  '</button>'
+              ) +
+            '</div>' +
+          '</div>';
+
+        productsGrid.appendChild(card);
+      });
+
+      // Attach event listeners
+      productsGrid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          FlashDB.addToCart(btn.dataset.id, 1);
+          renderProducts();
+          updateCartUI();
+        });
+      });
+      productsGrid.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = FlashDB.getProductById(btn.dataset.id);
+          const cartItem = FlashDB.getCart().find(c => c.productId === btn.dataset.id);
+          if (cartItem && p && cartItem.qty < p.stock) {
+            FlashDB.updateCartQty(btn.dataset.id, cartItem.qty + 1);
+          }
+          renderProducts();
+          updateCartUI();
+        });
+      });
+      productsGrid.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cartItem = FlashDB.getCart().find(c => c.productId === btn.dataset.id);
+          if (cartItem) {
+            if (cartItem.qty <= 1) FlashDB.removeFromCart(btn.dataset.id);
+            else FlashDB.updateCartQty(btn.dataset.id, cartItem.qty - 1);
+          }
+          renderProducts();
+          updateCartUI();
+        });
+      });
+
+      lucide.createIcons();
     }
 
-    document.getElementById('fetch-rates-btn').addEventListener('click', fetchRates);
-    fetchRates();
+    // ===== CART UI =====
+    function updateCartUI() {
+      const cart = FlashDB.getCart();
+      const total = FlashDB.getCartTotal();
+      const count = FlashDB.getCartCount();
+      const wallet = FlashDB.getWallet().balance;
+
+      // Header bar
+      document.getElementById('market-wallet').textContent = 'R' + wallet.toLocaleString('en-ZA', {minimumFractionDigits: 2});
+      document.getElementById('header-cart-count').textContent = count;
+      document.getElementById('header-cart-total').textContent = 'R' + total.toFixed(2);
+
+      // FAB
+      fabCart.style.display = count > 0 ? 'flex' : 'none';
+      fabBadge.textContent = count;
+
+      // Cart drawer items
+      cartItemsEl.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<div class="cart-empty"><i data-lucide="shopping-bag"></i><p>Your cart is empty</p></div>';
+      } else {
+        cart.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'cart-item';
+          div.setAttribute('data-testid', 'cart-item-' + item.productId);
+          div.innerHTML =
+            '<div class="cart-item-info">' +
+              '<strong>' + item.name + '</strong>' +
+              '<span class="cart-item-price">R' + item.price.toFixed(2) + ' each</span>' +
+            '</div>' +
+            '<div class="cart-item-controls">' +
+              '<button class="btn btn-icon btn-xs cart-qty-minus" data-id="' + item.productId + '"><i data-lucide="minus"></i></button>' +
+              '<span class="cart-item-qty">' + item.qty + '</span>' +
+              '<button class="btn btn-icon btn-xs cart-qty-plus" data-id="' + item.productId + '"><i data-lucide="plus"></i></button>' +
+              '<button class="btn btn-icon btn-xs btn-danger-icon cart-remove" data-id="' + item.productId + '"><i data-lucide="trash-2"></i></button>' +
+            '</div>' +
+            '<div class="cart-item-line-total">R' + (item.price * item.qty).toFixed(2) + '</div>';
+          cartItemsEl.appendChild(div);
+        });
+
+        // Cart drawer event listeners
+        cartItemsEl.querySelectorAll('.cart-qty-plus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const ci = FlashDB.getCart().find(c => c.productId === btn.dataset.id);
+            const p = FlashDB.getProductById(btn.dataset.id);
+            if (ci && p && ci.qty < p.stock) {
+              FlashDB.updateCartQty(btn.dataset.id, ci.qty + 1);
+              renderProducts(); updateCartUI();
+            }
+          });
+        });
+        cartItemsEl.querySelectorAll('.cart-qty-minus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const ci = FlashDB.getCart().find(c => c.productId === btn.dataset.id);
+            if (ci) {
+              if (ci.qty <= 1) FlashDB.removeFromCart(btn.dataset.id);
+              else FlashDB.updateCartQty(btn.dataset.id, ci.qty - 1);
+              renderProducts(); updateCartUI();
+            }
+          });
+        });
+        cartItemsEl.querySelectorAll('.cart-remove').forEach(btn => {
+          btn.addEventListener('click', () => {
+            FlashDB.removeFromCart(btn.dataset.id);
+            renderProducts(); updateCartUI();
+          });
+        });
+      }
+
+      // Totals in drawer
+      document.getElementById('cart-item-count').textContent = count;
+      document.getElementById('cart-total').textContent = 'R' + total.toFixed(2);
+      document.getElementById('cart-wallet').textContent = 'R' + wallet.toFixed(2);
+      document.getElementById('checkout-btn').disabled = count === 0;
+
+      lucide.createIcons();
+    }
+
+    // ===== CART DRAWER TOGGLE =====
+    function openCartDrawer() {
+      cartDrawer.classList.add('open');
+      cartOverlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCartDrawer() {
+      cartDrawer.classList.remove('open');
+      cartOverlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    fabCart.addEventListener('click', openCartDrawer);
+    document.getElementById('close-cart').addEventListener('click', closeCartDrawer);
+    cartOverlay.addEventListener('click', closeCartDrawer);
+
+    document.getElementById('clear-cart-btn').addEventListener('click', () => {
+      FlashDB.clearCart();
+      renderProducts();
+      updateCartUI();
+    });
+
+    // ===== CHECKOUT FLOW =====
+    const checkoutModal = document.getElementById('checkout-modal');
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      openCheckoutModal();
+    });
+
+    function openCheckoutModal() {
+      closeCartDrawer();
+      const cart = FlashDB.getCart();
+      const total = FlashDB.getCartTotal();
+      const wallet = FlashDB.getWallet().balance;
+      const remaining = wallet - total;
+
+      // Populate review step
+      let itemsHtml = '';
+      cart.forEach(item => {
+        itemsHtml +=
+          '<div class="checkout-line">' +
+            '<span>' + item.name + ' × ' + item.qty + '</span>' +
+            '<span>R' + (item.price * item.qty).toFixed(2) + '</span>' +
+          '</div>';
+      });
+      document.getElementById('checkout-items').innerHTML = itemsHtml;
+      document.getElementById('checkout-total').textContent = 'R' + total.toFixed(2);
+      document.getElementById('checkout-wallet').textContent = 'R' + wallet.toFixed(2);
+      document.getElementById('checkout-remaining').textContent = (remaining >= 0 ? 'R' : '-R') + Math.abs(remaining).toFixed(2);
+      document.getElementById('checkout-remaining').className = remaining >= 0 ? 'checkout-remaining-ok' : 'checkout-remaining-bad';
+
+      const warning = document.getElementById('checkout-warning');
+      const confirmBtn = document.getElementById('confirm-checkout-btn');
+      if (remaining < 0) {
+        warning.style.display = 'block';
+        warning.textContent = 'Insufficient wallet balance! You need R' + Math.abs(remaining).toFixed(2) + ' more. Top up your wallet on the Dashboard.';
+        confirmBtn.disabled = true;
+      } else {
+        warning.style.display = 'none';
+        confirmBtn.disabled = false;
+      }
+
+      // Show review, hide receipt
+      document.getElementById('checkout-step-review').style.display = 'block';
+      document.getElementById('checkout-step-receipt').style.display = 'none';
+      checkoutModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    document.getElementById('cancel-checkout-btn').addEventListener('click', () => {
+      checkoutModal.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+
+    document.getElementById('confirm-checkout-btn').addEventListener('click', () => {
+      const result = FlashDB.checkout();
+      if (!result.success) {
+        alert(result.error);
+        return;
+      }
+
+      // Show receipt
+      document.getElementById('checkout-step-review').style.display = 'none';
+      document.getElementById('checkout-step-receipt').style.display = 'block';
+      document.getElementById('checkout-success-msg').textContent = 'R' + result.receipt.total.toFixed(2) + ' deducted from wallet. Ref: ' + result.receipt.ref;
+
+      let receiptHtml =
+        '<div class="receipt-row"><strong>Reference:</strong> ' + result.receipt.ref + '</div>' +
+        '<div class="receipt-row"><strong>Date:</strong> ' + new Date(result.receipt.timestamp).toLocaleString('en-ZA') + '</div>' +
+        '<div class="receipt-divider"></div>';
+
+      result.receipt.items.forEach(item => {
+        receiptHtml +=
+          '<div class="receipt-row">' +
+            '<span>' + item.name + (item.qty > 1 ? ' × ' + item.qty : '') + '</span>' +
+            '<span>R' + item.lineTotal.toFixed(2) + '</span>' +
+          '</div>';
+        if (item.voucherPin) {
+          receiptHtml += '<div class="receipt-row receipt-pin"><strong>Voucher PIN:</strong> <span class="voucher-pin">' + item.voucherPin + '</span></div>';
+        }
+      });
+
+      receiptHtml +=
+        '<div class="receipt-divider"></div>' +
+        '<div class="receipt-row cart-total-main"><strong>Total Paid:</strong> <strong>R' + result.receipt.total.toFixed(2) + '</strong></div>' +
+        '<div class="receipt-row"><strong>New Wallet Balance:</strong> R' + FlashDB.getWallet().balance.toFixed(2) + '</div>';
+
+      document.getElementById('checkout-receipt').innerHTML = receiptHtml;
+      renderProducts();
+      updateCartUI();
+      lucide.createIcons();
+    });
+
+    document.getElementById('continue-shopping-btn').addEventListener('click', () => {
+      checkoutModal.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+
+    document.getElementById('print-order-btn').addEventListener('click', () => {
+      window.print();
+    });
+
+    // ===== FILTER/SORT LISTENERS =====
+    categorySelect.addEventListener('change', renderProducts);
+    sortSelect.addEventListener('change', renderProducts);
+    searchInput.addEventListener('input', renderProducts);
+
+    // ===== INITIAL =====
+    renderProducts();
+    updateCartUI();
   </script>
 </body>
 </html>

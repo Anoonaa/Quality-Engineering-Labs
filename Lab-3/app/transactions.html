@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transactions - FinLab</title>
+  <title>Transactions - MerchantHub</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <div class="nav-brand">
-      <span class="brand-text">FinLab</span>
-    </div>
-    <ul class="nav-links">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+        <ul class="nav-links">
       <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
       <li><a href="transactions.html" class="nav-link active" data-page="transactions">Transactions</a></li>
-      <li><a href="market.html" class="nav-link" data-page="market">Market</a></li>
-      <li><a href="payment.html" class="nav-link" data-page="payment">Payment</a></li>
-      <li><a href="login.html" class="nav-link" data-page="login">Login</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
       <span id="nav-username" data-testid="nav-username"></span>
@@ -27,39 +30,92 @@
 
   <main class="container">
     <section class="page-header">
-      <h1 data-testid="page-title"><i data-lucide="receipt"></i> Transactions</h1>
-      <p class="page-desc">Manage your transactions. Great for testing CRUD operations, list rendering, filtering, and state assertions.</p>
+      <h1 data-testid="page-title"><i data-lucide="receipt"></i> Merchant Transactions</h1>
+      <p class="page-desc">View and manage your merchant transaction ledger. All sales from checkout and sell pages appear here automatically. Add manual entries, filter, search, and export.</p>
     </section>
 
+    <!-- Stats Banner -->
+    <div class="txn-stats-banner" data-testid="txn-stats-banner">
+      <div class="txn-stat-card">
+        <i data-lucide="trending-up"></i>
+        <div>
+          <span class="txn-stat-label">Total Sales</span>
+          <span class="txn-stat-value" data-testid="stat-total-sales" id="stat-total-sales">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="trending-down"></i>
+        <div>
+          <span class="txn-stat-label">Stock Purchases</span>
+          <span class="txn-stat-value" data-testid="stat-total-stock" id="stat-total-stock">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="wallet"></i>
+        <div>
+          <span class="txn-stat-label">Net P&L</span>
+          <span class="txn-stat-value" data-testid="stat-net" id="stat-net">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="hash"></i>
+        <div>
+          <span class="txn-stat-label">Total Txns</span>
+          <span class="txn-stat-value" data-testid="stat-count" id="stat-count">0</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Add Transaction -->
-    <div class="transaction-input-row">
-      <input type="text" id="txn-desc" data-testid="txn-input" placeholder="Transaction description..." class="input" aria-label="Transaction description" />
-      <input type="number" id="txn-amount" data-testid="txn-amount" placeholder="Amount" class="input txn-amount-input" aria-label="Transaction amount" step="0.01" />
-      <select id="txn-type" data-testid="txn-type" class="input select txn-type-select" aria-label="Transaction type">
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
+    <div class="txn-add-section">
+      <h3><i data-lucide="plus-circle"></i> Add Transaction</h3>
+      <div class="transaction-input-row">
+        <input type="text" id="txn-desc" data-testid="txn-input" placeholder="Transaction description..." class="input" aria-label="Transaction description" />
+        <input type="number" id="txn-amount" data-testid="txn-amount" placeholder="Amount (R)" class="input txn-amount-input" step="0.01" min="0.01" />
+        <select id="txn-type" data-testid="txn-type" class="input select txn-type-select">
+          <option value="sale">Sale</option>
+          <option value="stock">Stock Purchase</option>
+        </select>
+        <select id="txn-category" data-testid="txn-category" class="input select txn-category-select">
+          <option value="airtime">Airtime</option>
+          <option value="data">Data Bundle</option>
+          <option value="1voucher">1Voucher</option>
+          <option value="electricity">Electricity</option>
+          <option value="cashout">Cash-Out</option>
+          <option value="account-payment">Account Payment</option>
+          <option value="gaming">Gaming Voucher</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="other">Other</option>
+        </select>
+        <button class="btn btn-primary" data-testid="add-txn-btn" id="add-txn-btn">
+          <i data-lucide="plus"></i> Add
+        </button>
+      </div>
+      <span class="form-error" data-testid="txn-error" id="txn-error" style="display:none;"></span>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="txn-toolbar">
+      <input type="text" id="txn-search" data-testid="txn-search" placeholder="Search transactions..." class="input" />
+      <div class="todo-filters" data-testid="txn-filters">
+        <button class="btn btn-filter active" data-filter="all" data-testid="filter-all">All</button>
+        <button class="btn btn-filter" data-filter="sale" data-testid="filter-sale">Sales</button>
+        <button class="btn btn-filter" data-filter="stock" data-testid="filter-stock">Purchases</button>
+      </div>
+      <select id="txn-cat-filter" data-testid="txn-cat-filter" class="input select">
+        <option value="all">All Categories</option>
+        <option value="airtime">Airtime</option>
+        <option value="data">Data</option>
+        <option value="1voucher">1Voucher</option>
+        <option value="electricity">Electricity</option>
+        <option value="cashout">Cash-Out</option>
+        <option value="gaming">Gaming</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="other">Other</option>
       </select>
-      <button class="btn btn-primary" data-testid="add-txn-btn" id="add-txn-btn">
-        <i data-lucide="plus"></i> Add
+      <button class="btn btn-outline btn-sm" data-testid="export-btn" id="export-btn" title="Export as CSV">
+        <i data-lucide="download"></i> Export
       </button>
-    </div>
-
-    <!-- Filter -->
-    <div class="todo-filters" data-testid="txn-filters">
-      <button class="btn btn-filter active" data-filter="all" data-testid="filter-all">All</button>
-      <button class="btn btn-filter" data-filter="income" data-testid="filter-income">Income</button>
-      <button class="btn btn-filter" data-filter="expense" data-testid="filter-expense">Expense</button>
-    </div>
-
-    <!-- Stats -->
-    <div class="todo-stats" data-testid="txn-stats">
-      <span data-testid="txn-count" id="txn-count">0 transactions</span>
-      <span data-testid="txn-balance" id="txn-balance" class="txn-net-balance">Balance: $0.00</span>
-    </div>
-
-    <!-- Loading -->
-    <div class="loading-state" data-testid="txn-loading" id="txn-loading">
-      <i data-lucide="loader" class="spin"></i> Loading transactions...
     </div>
 
     <!-- Transaction List -->
@@ -68,103 +124,131 @@
     <!-- Empty state -->
     <div class="empty-state" data-testid="empty-state" id="empty-state" style="display:none;">
       <i data-lucide="inbox"></i>
-      <p>No transactions to display.</p>
+      <p>No transactions yet. Make a sale from the <a href="market.html">Products</a> page or add one manually above.</p>
     </div>
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 FinLab. Built for testing purposes.</p>
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
   </footer>
 
+  <script src="db.js"></script>
   <script src="app.js"></script>
   <script>
-    let transactions = [];
     let currentFilter = 'all';
+    let currentCatFilter = 'all';
+    let searchQuery = '';
 
     const txnList = document.getElementById('txn-list');
     const txnDesc = document.getElementById('txn-desc');
     const txnAmountInput = document.getElementById('txn-amount');
     const txnType = document.getElementById('txn-type');
-    const txnCount = document.getElementById('txn-count');
-    const txnBalance = document.getElementById('txn-balance');
-    const loading = document.getElementById('txn-loading');
+    const txnCategory = document.getElementById('txn-category');
+    const txnSearch = document.getElementById('txn-search');
+    const txnCatFilter = document.getElementById('txn-cat-filter');
     const emptyState = document.getElementById('empty-state');
+    const txnError = document.getElementById('txn-error');
 
-    const incomeDescriptions = ['Salary deposit', 'Freelance payment', 'Refund received', 'Dividend income', 'Bonus payout'];
-    const expenseDescriptions = ['Grocery shopping', 'Electric bill', 'Coffee shop', 'Subscription fee', 'Restaurant dinner'];
-
-    async function fetchTransactions() {
-      loading.style.display = 'flex';
-      txnList.style.display = 'none';
-      try {
-        const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
-        const todos = await res.json();
-        transactions = todos.map((t, i) => ({
-          id: t.id,
-          description: t.completed ? incomeDescriptions[i % 5] : expenseDescriptions[i % 5],
-          amount: parseFloat((Math.random() * 500 + 10).toFixed(2)),
-          type: t.completed ? 'income' : 'expense',
-          processed: t.completed
-        }));
-      } catch (e) {
-        transactions = [];
-      }
-      loading.style.display = 'none';
-      txnList.style.display = 'block';
-      renderTransactions();
-    }
+    const categoryLabels = {
+      'airtime': 'Airtime', 'data': 'Data', '1voucher': '1Voucher',
+      'electricity': 'Electricity', 'cashout': 'Cash-Out', 'account-payment': 'Account Pay',
+      'gaming': 'Gaming', 'entertainment': 'Entertainment', 'other': 'Other'
+    };
+    const categoryColors = {
+      'airtime': '#2563eb', 'data': '#7c3aed', '1voucher': '#c9a96e',
+      'electricity': '#d97706', 'cashout': '#059669', 'account-payment': '#0891b2',
+      'gaming': '#dc2626', 'entertainment': '#059669', 'other': '#6b7280'
+    };
 
     function renderTransactions() {
-      const filtered = transactions.filter(t => {
-        if (currentFilter === 'income') return t.type === 'income';
-        if (currentFilter === 'expense') return t.type === 'expense';
-        return true;
-      });
+      let transactions = FlashDB.getTransactions();
 
+      // Filter by type
+      if (currentFilter === 'sale') transactions = transactions.filter(t => t.type === 'sale');
+      if (currentFilter === 'stock') transactions = transactions.filter(t => t.type === 'stock');
+
+      // Filter by category
+      if (currentCatFilter !== 'all') transactions = transactions.filter(t => t.category === currentCatFilter);
+
+      // Search
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        transactions = transactions.filter(t =>
+          (t.description && t.description.toLowerCase().includes(q)) ||
+          (t.ref && t.ref.toLowerCase().includes(q)) ||
+          (t.category && t.category.toLowerCase().includes(q))
+        );
+      }
+
+      // Stats (computed from all transactions, not filtered)
+      const allTxns = FlashDB.getTransactions();
+      const totalSales = allTxns.filter(t => t.type === 'sale').reduce((s, t) => s + (t.amount || 0), 0);
+      const totalStock = allTxns.filter(t => t.type === 'stock').reduce((s, t) => s + (t.amount || 0), 0);
+      const net = totalSales - totalStock;
+      document.getElementById('stat-total-sales').textContent = 'R' + totalSales.toFixed(2);
+      document.getElementById('stat-total-stock').textContent = 'R' + totalStock.toFixed(2);
+      document.getElementById('stat-net').textContent = (net >= 0 ? 'R' : '-R') + Math.abs(net).toFixed(2);
+      document.getElementById('stat-net').className = 'txn-stat-value ' + (net >= 0 ? 'stat-positive' : 'stat-negative');
+      document.getElementById('stat-count').textContent = allTxns.length;
+
+      // Render list
       txnList.innerHTML = '';
-      filtered.forEach(txn => {
+
+      if (transactions.length === 0) {
+        emptyState.style.display = 'flex';
+        txnList.style.display = 'none';
+        lucide.createIcons();
+        return;
+      }
+      emptyState.style.display = 'none';
+      txnList.style.display = 'block';
+
+      transactions.forEach((txn, i) => {
         const li = document.createElement('li');
         li.className = 'todo-item' + (txn.processed ? ' completed' : '');
-        li.setAttribute('data-testid', `txn-item-${txn.id}`);
+        li.setAttribute('data-testid', 'txn-item-' + i);
         li.setAttribute('role', 'listitem');
-        const sign = txn.type === 'income' ? '+' : '-';
-        const amountClass = txn.type === 'income' ? 'txn-amount-positive' : 'txn-amount-negative';
-        li.innerHTML = `
-          <label class="todo-label">
-            <input type="checkbox" ${txn.processed ? 'checked' : ''} 
-              data-testid="txn-checkbox-${txn.id}" 
-              aria-label="Mark ${txn.description} as processed"
-              class="todo-checkbox" />
-            <span class="todo-text" data-testid="txn-text-${txn.id}">${txn.description}</span>
-          </label>
-          <span class="txn-amount ${amountClass}" data-testid="txn-value-${txn.id}">${sign}$${txn.amount.toFixed(2)}</span>
-          <button class="btn btn-icon btn-danger-icon" data-testid="delete-txn-${txn.id}" aria-label="Delete transaction">
-            <i data-lucide="trash-2"></i>
-          </button>
-        `;
+
+        const sign = txn.type === 'sale' ? '+' : '-';
+        const amountClass = txn.type === 'sale' ? 'txn-amount-positive' : 'txn-amount-negative';
+        const catColor = categoryColors[txn.category] || '#6b7280';
+        const catLabel = categoryLabels[txn.category] || txn.category || 'Other';
+        const timeStr = txn.timestamp ? new Date(txn.timestamp).toLocaleString('en-ZA', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+
+        li.innerHTML =
+          '<label class="todo-label">' +
+            '<input type="checkbox" ' + (txn.processed ? 'checked' : '') +
+              ' data-testid="txn-checkbox-' + i + '"' +
+              ' class="todo-checkbox" title="Mark as processed" />' +
+            '<div class="txn-text-block">' +
+              '<span class="todo-text" data-testid="txn-text-' + i + '">' + (txn.description || 'No description') + '</span>' +
+              '<span class="txn-meta">' + timeStr + (txn.ref ? ' &bull; ' + txn.ref : '') + '</span>' +
+            '</div>' +
+          '</label>' +
+          '<span class="txn-tag" style="background:' + catColor + '15;color:' + catColor + ';border:1px solid ' + catColor + '30;">' + catLabel + '</span>' +
+          '<span class="txn-amount ' + amountClass + '" data-testid="txn-value-' + i + '">' + sign + 'R' + (txn.amount || 0).toFixed(2) + '</span>' +
+          '<button class="btn btn-icon btn-danger-icon" data-testid="delete-txn-' + i + '" title="Delete transaction">' +
+            '<i data-lucide="trash-2"></i>' +
+          '</button>';
+
+        // Checkbox toggle
         li.querySelector('input[type="checkbox"]').addEventListener('change', () => {
-          txn.processed = !txn.processed;
+          FlashDB.toggleTransactionProcessed(txn.id);
           renderTransactions();
         });
+
+        // Delete
         li.querySelector('button').addEventListener('click', () => {
-          transactions = transactions.filter(t => t.id !== txn.id);
-          renderTransactions();
+          if (confirm('Delete this transaction?')) {
+            FlashDB.deleteTransaction(txn.id);
+            renderTransactions();
+          }
         });
+
         txnList.appendChild(li);
       });
 
       lucide.createIcons();
-
-      const total = transactions.length;
-      const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-      const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-      const net = income - expense;
-      txnCount.textContent = `${total} transaction${total !== 1 ? 's' : ''}`;
-      txnBalance.textContent = `Balance: ${net >= 0 ? '' : '-'}$${Math.abs(net).toFixed(2)}`;
-      txnBalance.className = net >= 0 ? 'txn-net-balance txn-amount-positive' : 'txn-net-balance txn-amount-negative';
-
-      emptyState.style.display = filtered.length === 0 ? 'flex' : 'none';
-      txnList.style.display = filtered.length === 0 ? 'none' : 'block';
     }
 
     // Add transaction
@@ -172,19 +256,56 @@
       const desc = txnDesc.value.trim();
       const amount = parseFloat(txnAmountInput.value);
       const type = txnType.value;
-      if (!desc || isNaN(amount) || amount <= 0) return;
-      const newTxn = { id: Date.now(), description: desc, amount, type, processed: false };
-      transactions.unshift(newTxn);
+      const category = txnCategory.value;
+
+      if (!desc) {
+        txnError.textContent = 'Please enter a description.';
+        txnError.style.display = 'block';
+        txnDesc.focus();
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        txnError.textContent = 'Please enter a valid amount greater than zero.';
+        txnError.style.display = 'block';
+        txnAmountInput.focus();
+        return;
+      }
+
+      txnError.style.display = 'none';
+
+      FlashDB.addTransaction({
+        description: desc,
+        amount: amount,
+        type: type,
+        category: category,
+      });
+
       txnDesc.value = '';
       txnAmountInput.value = '';
       renderTransactions();
+
+      // Flash success
+      const addBtn = document.getElementById('add-txn-btn');
+      addBtn.textContent = 'Added!';
+      addBtn.classList.add('btn-success-flash');
+      setTimeout(() => {
+        addBtn.innerHTML = '<i data-lucide="plus"></i> Add';
+        addBtn.classList.remove('btn-success-flash');
+        lucide.createIcons();
+      }, 1200);
     });
 
-    txnDesc.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('add-txn-btn').click();
+    // Enter key to add
+    txnDesc.addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('add-txn-btn').click(); });
+    txnAmountInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('add-txn-btn').click(); });
+
+    // Search
+    txnSearch.addEventListener('input', () => {
+      searchQuery = txnSearch.value;
+      renderTransactions();
     });
 
-    // Filters
+    // Type filter buttons
     document.querySelectorAll('.btn-filter').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
@@ -194,7 +315,29 @@
       });
     });
 
-    fetchTransactions();
+    // Category filter dropdown
+    txnCatFilter.addEventListener('change', () => {
+      currentCatFilter = txnCatFilter.value;
+      renderTransactions();
+    });
+
+    // Export CSV
+    document.getElementById('export-btn').addEventListener('click', () => {
+      const txns = FlashDB.getTransactions();
+      if (txns.length === 0) { alert('No transactions to export.'); return; }
+      let csv = 'ID,Date,Description,Type,Category,Amount,Processed,Ref\n';
+      txns.forEach(t => {
+        csv += '"' + t.id + '","' + (t.timestamp || '') + '","' + (t.description || '').replace(/"/g, '""') + '","' + t.type + '","' + (t.category || '') + '",' + (t.amount || 0) + ',' + (t.processed ? 'Yes' : 'No') + ',"' + (t.ref || '') + '"\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'flashlab-transactions.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Initial render
+    renderTransactions();
   </script>
 </body>
 </html>

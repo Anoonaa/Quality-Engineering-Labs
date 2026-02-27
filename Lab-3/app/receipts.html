@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipts - MerchantHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link active" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="file-text"></i> Receipt History</h1>
+      <p class="page-desc">View and manage all purchase and sale receipts. Receipts are automatically generated from checkout and sell operations.</p>
+    </section>
+
+    <!-- Stats -->
+    <div class="txn-stats-banner" data-testid="receipt-stats">
+      <div class="txn-stat-card">
+        <i data-lucide="file-text"></i>
+        <div>
+          <span class="txn-stat-label">Total Receipts</span>
+          <span class="txn-stat-value" id="stat-total-receipts" data-testid="stat-total-receipts">0</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="banknote"></i>
+        <div>
+          <span class="txn-stat-label">Total Value</span>
+          <span class="txn-stat-value" id="stat-total-value" data-testid="stat-total-value">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="package"></i>
+        <div>
+          <span class="txn-stat-label">Items Sold</span>
+          <span class="txn-stat-value" id="stat-items-sold" data-testid="stat-items-sold">0</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="zap"></i>
+        <div>
+          <span class="txn-stat-label">Avg Receipt Value</span>
+          <span class="txn-stat-value" id="stat-avg-receipt" data-testid="stat-avg-receipt">R0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Toolbar -->
+    <div class="txn-toolbar" data-testid="receipt-toolbar">
+      <input type="text" id="receipt-search" data-testid="receipt-search" class="input" placeholder="Search by ref, product name, or phone..." />
+      <select id="receipt-sort" data-testid="receipt-sort" class="input select">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="highest">Highest Value</option>
+        <option value="lowest">Lowest Value</option>
+      </select>
+      <button class="btn btn-outline btn-sm" id="export-receipts-btn" data-testid="export-receipts-btn">
+        <i data-lucide="download"></i> Export CSV
+      </button>
+    </div>
+
+    <!-- Receipt List -->
+    <div class="receipt-list" id="receipt-list" data-testid="receipt-list"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="receipt-empty" data-testid="receipt-empty" style="display:none;">
+      <i data-lucide="inbox"></i>
+      <p>No receipts yet. Receipts are created when you check out from <a href="market.html">Products</a> or process a sale from <a href="payment.html">Sell</a>.</p>
+    </div>
+
+    <!-- Receipt Detail Modal -->
+    <div class="modal-overlay" id="receipt-modal" data-testid="receipt-modal" style="display:none;">
+      <div class="modal-card">
+        <div id="receipt-detail" data-testid="receipt-detail"></div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="print-receipt-modal" data-testid="print-receipt-modal"><i data-lucide="printer"></i> Print</button>
+          <button class="btn btn-outline" id="close-receipt-modal" data-testid="close-receipt-modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    function refreshReceiptStats() {
+      const receipts = FlashDB.getReceipts();
+      const totalValue = receipts.reduce((s, r) => s + (r.total || 0), 0);
+      const totalItems = receipts.reduce((s, r) => s + (r.items || []).reduce((is, item) => is + (item.qty || 1), 0), 0);
+
+      document.getElementById('stat-total-receipts').textContent = receipts.length;
+      document.getElementById('stat-total-value').textContent = 'R' + totalValue.toLocaleString('en-ZA', { minimumFractionDigits: 2 });
+      document.getElementById('stat-items-sold').textContent = totalItems;
+      document.getElementById('stat-avg-receipt').textContent = receipts.length > 0
+        ? 'R' + (totalValue / receipts.length).toFixed(2)
+        : 'R0.00';
+    }
+
+    function renderReceipts() {
+      const search = document.getElementById('receipt-search').value.toLowerCase().trim();
+      const sort = document.getElementById('receipt-sort').value;
+      let receipts = FlashDB.getReceipts();
+
+      // Search
+      if (search) {
+        receipts = receipts.filter(r =>
+          (r.ref && r.ref.toLowerCase().includes(search)) ||
+          (r.customerPhone && r.customerPhone.includes(search)) ||
+          (r.items || []).some(item => item.name && item.name.toLowerCase().includes(search))
+        );
+      }
+
+      // Sort
+      if (sort === 'newest') receipts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      else if (sort === 'oldest') receipts.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      else if (sort === 'highest') receipts.sort((a, b) => (b.total || 0) - (a.total || 0));
+      else if (sort === 'lowest') receipts.sort((a, b) => (a.total || 0) - (b.total || 0));
+
+      const list = document.getElementById('receipt-list');
+      const empty = document.getElementById('receipt-empty');
+
+      if (receipts.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'flex';
+        lucide.createIcons();
+        return;
+      }
+      empty.style.display = 'none';
+
+      list.innerHTML = receipts.map((r, i) => {
+        const date = r.timestamp ? new Date(r.timestamp).toLocaleString('en-ZA', {
+          day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : '—';
+        const itemCount = (r.items || []).reduce((s, item) => s + (item.qty || 1), 0);
+        const firstItem = (r.items || [])[0];
+        const itemSummary = firstItem
+          ? firstItem.name + (r.items.length > 1 ? ' +' + (r.items.length - 1) + ' more' : '')
+          : 'No items';
+
+        return '<div class="receipt-card" data-testid="receipt-card-' + i + '" data-id="' + r.id + '">' +
+          '<div class="receipt-card-left">' +
+            '<div class="receipt-card-icon"><i data-lucide="file-text"></i></div>' +
+            '<div class="receipt-card-info">' +
+              '<strong class="receipt-ref" data-testid="receipt-ref-' + i + '">' + (r.ref || r.id) + '</strong>' +
+              '<span class="receipt-date">' + date + '</span>' +
+              '<span class="receipt-items-summary">' + itemSummary + ' (' + itemCount + ' items)</span>' +
+              (r.customerPhone ? '<span class="receipt-customer"><i data-lucide="user"></i> ' + (r.customerName || r.customerPhone) + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="receipt-card-right">' +
+            '<span class="receipt-total" data-testid="receipt-total-' + i + '">R' + (r.total || 0).toFixed(2) + '</span>' +
+            (r.commission ? '<span class="receipt-commission">+R' + r.commission.toFixed(2) + ' commission</span>' : '') +
+            '<button class="btn btn-sm btn-outline view-receipt" data-id="' + r.id + '" data-testid="view-receipt-' + i + '"><i data-lucide="eye"></i> Details</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      // Attach view events
+      list.querySelectorAll('.view-receipt').forEach(btn => {
+        btn.addEventListener('click', () => openReceiptDetail(btn.dataset.id));
+      });
+
+      lucide.createIcons();
+    }
+
+    function openReceiptDetail(id) {
+      const receipts = FlashDB.getReceipts();
+      const r = receipts.find(rc => rc.id === id);
+      if (!r) return;
+
+      const date = r.timestamp ? new Date(r.timestamp).toLocaleString('en-ZA', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : '—';
+
+      let itemsHtml = (r.items || []).map(item =>
+        '<div class="checkout-line">' +
+          '<span>' + item.name + (item.qty > 1 ? ' x' + item.qty : '') + '</span>' +
+          '<span>R' + (item.lineTotal || item.unitPrice || 0).toFixed(2) + '</span>' +
+        '</div>' +
+        (item.voucherPin ? '<div class="receipt-pin"><span class="receipt-pin-label">Voucher PIN:</span> <span class="voucher-pin">' + item.voucherPin + '</span></div>' : '') +
+        (item.electricityToken ? '<div class="receipt-pin"><span class="receipt-pin-label">Token:</span> <span class="voucher-pin">' + item.electricityToken + '</span></div>' : '')
+      ).join('');
+
+      document.getElementById('receipt-detail').innerHTML =
+        '<div class="checkout-receipt-block">' +
+          '<div style="text-align:center;margin-bottom:1rem;">' +
+            '<h2 style="font-size:1.1rem;">MerchantHub Receipt</h2>' +
+            '<p class="text-muted">' + date + '</p>' +
+          '</div>' +
+          '<div class="receipt-divider"></div>' +
+          '<p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong>Ref:</strong> ' + (r.ref || r.id) + '</p>' +
+          (r.customerPhone ? '<p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong>Customer:</strong> ' + (r.customerName || '') + ' (' + r.customerPhone + ')</p>' : '') +
+          (r.meterNumber ? '<p style="font-size:0.85rem;margin-bottom:0.5rem;"><strong>Meter:</strong> ' + r.meterNumber + '</p>' : '') +
+          '<div class="receipt-divider"></div>' +
+          itemsHtml +
+          '<div class="receipt-divider"></div>' +
+          '<div class="cart-total-row cart-total-main"><span>Total:</span><span>R' + (r.total || 0).toFixed(2) + '</span></div>' +
+          (r.walletBefore !== undefined ? '<div class="cart-total-row"><span>Wallet Before:</span><span>R' + (r.walletBefore || 0).toFixed(2) + '</span></div>' : '') +
+          (r.walletAfter !== undefined ? '<div class="cart-total-row"><span>Wallet After:</span><span>R' + (r.walletAfter || 0).toFixed(2) + '</span></div>' : '') +
+          (r.commission ? '<div class="cart-total-row"><span>Commission Earned:</span><span class="stat-positive">+R' + r.commission.toFixed(2) + '</span></div>' : '') +
+        '</div>';
+
+      document.getElementById('receipt-modal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    document.getElementById('close-receipt-modal').addEventListener('click', () => {
+      document.getElementById('receipt-modal').style.display = 'none';
+    });
+
+    document.getElementById('receipt-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'receipt-modal') document.getElementById('receipt-modal').style.display = 'none';
+    });
+
+    document.getElementById('print-receipt-modal').addEventListener('click', () => window.print());
+
+    // Export CSV
+    document.getElementById('export-receipts-btn').addEventListener('click', () => {
+      const receipts = FlashDB.getReceipts();
+      if (receipts.length === 0) { alert('No receipts to export'); return; }
+
+      let csv = 'Ref,Date,Items,Total,Customer,Commission\n';
+      receipts.forEach(r => {
+        const date = r.timestamp ? new Date(r.timestamp).toISOString() : '';
+        const items = (r.items || []).map(i => i.name).join('; ');
+        csv += '"' + (r.ref || r.id) + '","' + date + '","' + items + '",' + (r.total || 0) + ',"' + (r.customerPhone || '') + '",' + (r.commission || 0) + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'receipts-export-' + Date.now() + '.csv';
+      a.click(); URL.revokeObjectURL(url);
+    });
+
+    // Search & Sort
+    document.getElementById('receipt-search').addEventListener('input', renderReceipts);
+    document.getElementById('receipt-sort').addEventListener('change', renderReceipts);
+
+    // Init
+    refreshReceiptStats();
+    renderReceipts();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

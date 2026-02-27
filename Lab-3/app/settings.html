@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - MerchantHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link active" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="settings"></i> Merchant Settings</h1>
+      <p class="page-desc">Configure your merchant profile, notification preferences, security, and data management. All settings persist in your browser.</p>
+    </section>
+
+    <!-- Settings Tabs -->
+    <div class="settings-tabs" data-testid="settings-tabs">
+      <button class="settings-tab active" data-tab="profile" data-testid="tab-profile"><i data-lucide="user"></i> Profile</button>
+      <button class="settings-tab" data-tab="notifications" data-testid="tab-notifications"><i data-lucide="bell"></i> Notifications</button>
+      <button class="settings-tab" data-tab="security" data-testid="tab-security"><i data-lucide="shield"></i> Security</button>
+      <button class="settings-tab" data-tab="display" data-testid="tab-display"><i data-lucide="palette"></i> Display</button>
+      <button class="settings-tab" data-tab="data" data-testid="tab-data"><i data-lucide="database"></i> Data</button>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="settings-panel" id="panel-profile" data-testid="panel-profile">
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="store"></i> Store Information</h3>
+        <div class="settings-form-grid">
+          <div class="form-group">
+            <label for="set-store-name">Store Name</label>
+            <input type="text" id="set-store-name" data-testid="set-store-name" class="input" placeholder="My Merchant Store" />
+          </div>
+          <div class="form-group">
+            <label for="set-owner">Owner Name</label>
+            <input type="text" id="set-owner" data-testid="set-owner" class="input" placeholder="Admin User" />
+          </div>
+          <div class="form-group">
+            <label for="set-email">Email Address</label>
+            <input type="email" id="set-email" data-testid="set-email" class="input" placeholder="admin@merchant.co.za" />
+          </div>
+          <div class="form-group">
+            <label for="set-phone">Phone Number</label>
+            <input type="tel" id="set-phone" data-testid="set-phone" class="input" placeholder="011 234 5678" />
+          </div>
+          <div class="form-group form-group-full">
+            <label for="set-address">Address</label>
+            <input type="text" id="set-address" data-testid="set-address" class="input" placeholder="123 Main Road, Johannesburg, 2000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="percent"></i> Business Settings</h3>
+        <div class="settings-form-grid">
+          <div class="form-group">
+            <label for="set-commission">Commission Rate (%)</label>
+            <input type="number" id="set-commission" data-testid="set-commission" class="input" placeholder="5" min="0" max="100" step="0.5" />
+          </div>
+          <div class="form-group">
+            <label for="set-tax">VAT Rate (%)</label>
+            <input type="number" id="set-tax" data-testid="set-tax" class="input" placeholder="15" min="0" max="100" step="0.5" />
+          </div>
+          <div class="form-group">
+            <label for="set-currency">Currency</label>
+            <select id="set-currency" data-testid="set-currency" class="input select">
+              <option value="ZAR">ZAR — South African Rand</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GBP">GBP — British Pound</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-save-bar">
+        <button class="btn btn-primary" id="save-profile" data-testid="save-profile"><i data-lucide="check"></i> Save Profile</button>
+        <span class="settings-save-msg" id="profile-saved" data-testid="profile-saved" style="display:none;">Settings saved!</span>
+      </div>
+    </div>
+
+    <!-- Notifications Tab -->
+    <div class="settings-panel" id="panel-notifications" data-testid="panel-notifications" style="display:none;">
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="bell"></i> Notification Preferences</h3>
+        <div class="settings-toggle-list">
+          <div class="settings-toggle-item">
+            <div>
+              <strong>Email Notifications</strong>
+              <p class="text-muted">Receive sale confirmations and weekly summaries via email</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-email" data-testid="notif-email" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-toggle-item">
+            <div>
+              <strong>SMS Alerts</strong>
+              <p class="text-muted">Get SMS alerts for high-value transactions and low stock</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-sms" data-testid="notif-sms" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-toggle-item">
+            <div>
+              <strong>Push Notifications</strong>
+              <p class="text-muted">Browser push notifications for real-time sale updates</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-push" data-testid="notif-push" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-toggle-item">
+            <div>
+              <strong>Low Stock Alerts</strong>
+              <p class="text-muted">Notify when product stock drops below 5 units</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-stock" data-testid="notif-stock" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="settings-save-bar">
+        <button class="btn btn-primary" id="save-notifications" data-testid="save-notifications"><i data-lucide="check"></i> Save Preferences</button>
+        <span class="settings-save-msg" id="notif-saved" data-testid="notif-saved" style="display:none;">Preferences saved!</span>
+      </div>
+    </div>
+
+    <!-- Security Tab -->
+    <div class="settings-panel" id="panel-security" data-testid="panel-security" style="display:none;">
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="lock"></i> Change Merchant PIN</h3>
+        <div class="settings-form-grid">
+          <div class="form-group">
+            <label for="set-current-pin">Current PIN</label>
+            <input type="password" id="set-current-pin" data-testid="set-current-pin" class="input" placeholder="Enter current PIN" />
+          </div>
+          <div class="form-group">
+            <label for="set-new-pin">New PIN</label>
+            <input type="password" id="set-new-pin" data-testid="set-new-pin" class="input" placeholder="Enter new PIN" />
+          </div>
+          <div class="form-group">
+            <label for="set-confirm-pin">Confirm New PIN</label>
+            <input type="password" id="set-confirm-pin" data-testid="set-confirm-pin" class="input" placeholder="Confirm new PIN" />
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top:1rem;">
+          <button class="btn btn-primary" id="change-pin" data-testid="change-pin"><i data-lucide="key"></i> Change PIN</button>
+        </div>
+        <div class="settings-save-msg" id="pin-result" data-testid="pin-result" style="display:none;margin-top:1rem;"></div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="shield-check"></i> Two-Factor Authentication</h3>
+        <div class="settings-toggle-item">
+          <div>
+            <strong>Enable 2FA</strong>
+            <p class="text-muted">Add an extra layer of security with a verification code at login</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="enable-2fa" data-testid="enable-2fa" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="history"></i> Active Sessions</h3>
+        <div class="session-list" id="session-list" data-testid="session-list"></div>
+      </div>
+    </div>
+
+    <!-- Display Tab -->
+    <div class="settings-panel" id="panel-display" data-testid="panel-display" style="display:none;">
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="palette"></i> Theme</h3>
+        <div class="theme-selector" data-testid="theme-selector">
+          <label class="theme-option">
+            <input type="radio" name="theme" value="light" data-testid="theme-light" checked />
+            <div class="theme-preview theme-preview-light">
+              <div class="theme-preview-nav"></div>
+              <div class="theme-preview-body">
+                <div class="theme-preview-card"></div>
+                <div class="theme-preview-card"></div>
+              </div>
+            </div>
+            <span>Light</span>
+          </label>
+          <label class="theme-option">
+            <input type="radio" name="theme" value="dark" data-testid="theme-dark" />
+            <div class="theme-preview theme-preview-dark">
+              <div class="theme-preview-nav"></div>
+              <div class="theme-preview-body">
+                <div class="theme-preview-card"></div>
+                <div class="theme-preview-card"></div>
+              </div>
+            </div>
+            <span>Dark</span>
+          </label>
+          <label class="theme-option">
+            <input type="radio" name="theme" value="system" data-testid="theme-system" />
+            <div class="theme-preview theme-preview-system">
+              <div class="theme-preview-nav"></div>
+              <div class="theme-preview-body">
+                <div class="theme-preview-card"></div>
+                <div class="theme-preview-card"></div>
+              </div>
+            </div>
+            <span>System</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="type"></i> Font Size</h3>
+        <div class="font-size-control" data-testid="font-size-control">
+          <button class="btn btn-outline btn-sm" id="font-decrease" data-testid="font-decrease">A-</button>
+          <span id="font-size-display" data-testid="font-size-display">100%</span>
+          <button class="btn btn-outline btn-sm" id="font-increase" data-testid="font-increase">A+</button>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="layout-grid"></i> Layout Density</h3>
+        <div class="settings-toggle-item">
+          <div>
+            <strong>Compact Mode</strong>
+            <p class="text-muted">Reduce spacing and padding for more information density</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="compact-mode" data-testid="compact-mode" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Tab -->
+    <div class="settings-panel" id="panel-data" data-testid="panel-data" style="display:none;">
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="hard-drive"></i> Storage Usage</h3>
+        <div class="storage-stats" data-testid="storage-stats">
+          <div class="storage-bar-container">
+            <div class="storage-bar" id="storage-bar" data-testid="storage-bar" style="width:0%;"></div>
+          </div>
+          <span class="storage-text" id="storage-text" data-testid="storage-text">Calculating...</span>
+        </div>
+        <div class="storage-breakdown" id="storage-breakdown" data-testid="storage-breakdown"></div>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="download"></i> Export Data</h3>
+        <p class="text-muted" style="margin-bottom:1rem;">Download a full backup of all your MerchantHub data as a JSON file.</p>
+        <button class="btn btn-primary" id="export-data" data-testid="export-data"><i data-lucide="download"></i> Export All Data</button>
+      </div>
+
+      <div class="settings-card">
+        <h3 class="settings-card-title"><i data-lucide="upload"></i> Import Data</h3>
+        <p class="text-muted" style="margin-bottom:1rem;">Restore data from a previously exported JSON backup file.</p>
+        <input type="file" id="import-file" data-testid="import-file" accept=".json" style="display:none;" />
+        <button class="btn btn-outline" id="import-data" data-testid="import-data"><i data-lucide="upload"></i> Import Data</button>
+        <div class="settings-save-msg" id="import-result" data-testid="import-result" style="display:none;margin-top:1rem;"></div>
+      </div>
+
+      <div class="settings-card settings-card-danger">
+        <h3 class="settings-card-title" style="color:var(--danger);"><i data-lucide="alert-triangle"></i> Danger Zone</h3>
+        <p class="text-muted" style="margin-bottom:1rem;">These actions are irreversible. All transactions, receipts, customers, and wallet data will be permanently deleted.</p>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <button class="btn btn-outline btn-danger" id="reset-all-data" data-testid="reset-all-data"><i data-lucide="refresh-cw"></i> Reset All Data</button>
+          <button class="btn btn-outline btn-danger" id="clear-txns" data-testid="clear-txns"><i data-lucide="trash-2"></i> Clear Transactions Only</button>
+          <button class="btn btn-outline btn-danger" id="clear-receipts" data-testid="clear-receipts"><i data-lucide="trash-2"></i> Clear Receipts Only</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ===== Tab Switching =====
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.settings-panel').forEach(p => p.style.display = 'none');
+        document.getElementById('panel-' + tab.dataset.tab).style.display = 'block';
+        lucide.createIcons();
+      });
+    });
+
+    // ===== Load Profile Settings =====
+    function loadSettings() {
+      const s = FlashDB.getSettings();
+      document.getElementById('set-store-name').value = s.storeName || '';
+      document.getElementById('set-owner').value = s.ownerName || '';
+      document.getElementById('set-email').value = s.email || '';
+      document.getElementById('set-phone').value = s.phone || '';
+      document.getElementById('set-address').value = s.address || '';
+      document.getElementById('set-commission').value = s.commissionRate || 5;
+      document.getElementById('set-tax').value = s.taxRate || 15;
+      document.getElementById('set-currency').value = s.currency || 'ZAR';
+
+      // Notifications
+      const n = s.notifications || {};
+      document.getElementById('notif-email').checked = n.email !== false;
+      document.getElementById('notif-sms').checked = n.sms === true;
+      document.getElementById('notif-push').checked = n.push !== false;
+
+      // Theme
+      const theme = s.theme || 'light';
+      document.querySelector('input[name="theme"][value="' + theme + '"]').checked = true;
+    }
+
+    // ===== Save Profile =====
+    document.getElementById('save-profile').addEventListener('click', () => {
+      FlashDB.updateSettings({
+        storeName: document.getElementById('set-store-name').value,
+        ownerName: document.getElementById('set-owner').value,
+        email: document.getElementById('set-email').value,
+        phone: document.getElementById('set-phone').value,
+        address: document.getElementById('set-address').value,
+        commissionRate: parseFloat(document.getElementById('set-commission').value) || 5,
+        taxRate: parseFloat(document.getElementById('set-tax').value) || 15,
+        currency: document.getElementById('set-currency').value,
+      });
+      showSaveMsg('profile-saved');
+    });
+
+    // ===== Save Notifications =====
+    document.getElementById('save-notifications').addEventListener('click', () => {
+      FlashDB.updateSettings({
+        notifications: {
+          email: document.getElementById('notif-email').checked,
+          sms: document.getElementById('notif-sms').checked,
+          push: document.getElementById('notif-push').checked,
+        }
+      });
+      showSaveMsg('notif-saved');
+    });
+
+    // ===== Change PIN =====
+    document.getElementById('change-pin').addEventListener('click', () => {
+      const current = document.getElementById('set-current-pin').value;
+      const newPin = document.getElementById('set-new-pin').value;
+      const confirm = document.getElementById('set-confirm-pin').value;
+      const result = document.getElementById('pin-result');
+
+      if (!current) { showResult(result, 'Enter your current PIN', 'error'); return; }
+      if (!newPin || newPin.length < 4) { showResult(result, 'New PIN must be at least 4 characters', 'error'); return; }
+      if (newPin !== confirm) { showResult(result, 'PINs do not match', 'error'); return; }
+
+      showResult(result, 'PIN changed successfully!', 'success');
+      document.getElementById('set-current-pin').value = '';
+      document.getElementById('set-new-pin').value = '';
+      document.getElementById('set-confirm-pin').value = '';
+    });
+
+    // ===== Session List =====
+    function renderSessions() {
+      const token = localStorage.getItem('token') || '';
+      const sessionId = sessionStorage.getItem('sessionId') || '';
+      const loginTime = localStorage.getItem('loginTime') || 'Unknown';
+      const user = localStorage.getItem('user') || 'guest';
+
+      document.getElementById('session-list').innerHTML =
+        '<div class="session-item session-current">' +
+          '<div class="session-item-info">' +
+            '<strong>Current Session</strong>' +
+            '<p class="text-muted">' + user + ' — logged in ' + loginTime + '</p>' +
+            '<p class="text-muted" style="font-size:0.75rem;">Token: ' + (token.substring(0, 20) || 'No token') + '...</p>' +
+            '<p class="text-muted" style="font-size:0.75rem;">Session: ' + (sessionId || 'None') + '</p>' +
+          '</div>' +
+          '<span class="session-badge">Active</span>' +
+        '</div>';
+    }
+
+    // ===== Theme Selector =====
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        FlashDB.updateSettings({ theme: radio.value });
+        // In a real app this would toggle dark mode — for testing purposes we just save it
+      });
+    });
+
+    // ===== Font Size =====
+    let fontSize = 100;
+    document.getElementById('font-decrease').addEventListener('click', () => {
+      fontSize = Math.max(80, fontSize - 10);
+      document.getElementById('font-size-display').textContent = fontSize + '%';
+      document.documentElement.style.fontSize = fontSize + '%';
+    });
+    document.getElementById('font-increase').addEventListener('click', () => {
+      fontSize = Math.min(140, fontSize + 10);
+      document.getElementById('font-size-display').textContent = fontSize + '%';
+      document.documentElement.style.fontSize = fontSize + '%';
+    });
+
+    // ===== Storage Stats =====
+    function calcStorage() {
+      const keys = ['mhub_wallet', 'mhub_products', 'mhub_cart', 'mhub_transactions', 'mhub_receipts', 'mhub_customers', 'mhub_settings'];
+      let total = 0;
+      const breakdown = [];
+      keys.forEach(k => {
+        const val = localStorage.getItem(k);
+        const size = val ? new Blob([val]).size : 0;
+        total += size;
+        breakdown.push({ key: k.replace('mhub_', ''), size });
+      });
+
+      const maxStorage = 5 * 1024 * 1024; // ~5MB localStorage limit
+      const pct = ((total / maxStorage) * 100).toFixed(2);
+      document.getElementById('storage-bar').style.width = pct + '%';
+      document.getElementById('storage-text').textContent = (total / 1024).toFixed(1) + ' KB used of ~5 MB (' + pct + '%)';
+
+      document.getElementById('storage-breakdown').innerHTML = breakdown.map(b =>
+        '<div class="storage-row">' +
+          '<span class="storage-key">' + b.key + '</span>' +
+          '<span class="storage-size">' + (b.size / 1024).toFixed(1) + ' KB</span>' +
+        '</div>'
+      ).join('');
+    }
+
+    // ===== Export Data =====
+    document.getElementById('export-data').addEventListener('click', () => {
+      const data = {
+        exportDate: new Date().toISOString(),
+        version: '1.0',
+        wallet: FlashDB.getWallet(),
+        products: FlashDB.getProducts(),
+        transactions: FlashDB.getTransactions(),
+        receipts: FlashDB.getReceipts(),
+        customers: FlashDB.getCustomers(),
+        settings: FlashDB.getSettings(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'merchanthub-backup-' + Date.now() + '.json';
+      a.click(); URL.revokeObjectURL(url);
+    });
+
+    // ===== Import Data =====
+    document.getElementById('import-data').addEventListener('click', () => {
+      document.getElementById('import-file').click();
+    });
+
+    document.getElementById('import-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const result = document.getElementById('import-result');
+        try {
+          const data = JSON.parse(evt.target.result);
+          if (data.wallet) localStorage.setItem('mhub_wallet', JSON.stringify(data.wallet));
+          if (data.products) localStorage.setItem('mhub_products', JSON.stringify(data.products));
+          if (data.transactions) localStorage.setItem('mhub_transactions', JSON.stringify(data.transactions));
+          if (data.receipts) localStorage.setItem('mhub_receipts', JSON.stringify(data.receipts));
+          if (data.customers) localStorage.setItem('mhub_customers', JSON.stringify(data.customers));
+          if (data.settings) localStorage.setItem('mhub_settings', JSON.stringify(data.settings));
+          showResult(result, 'Data imported successfully! Refreshing...', 'success');
+          setTimeout(() => location.reload(), 1500);
+        } catch {
+          showResult(result, 'Invalid backup file. Must be valid JSON.', 'error');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // ===== Danger Zone =====
+    document.getElementById('reset-all-data').addEventListener('click', () => {
+      if (confirm('This will PERMANENTLY reset ALL data to defaults. Continue?')) {
+        FlashDB.resetAll();
+        alert('All data has been reset.'); location.reload();
+      }
+    });
+    document.getElementById('clear-txns').addEventListener('click', () => {
+      if (confirm('Clear all transactions? This cannot be undone.')) {
+        localStorage.setItem('mhub_transactions', '[]');
+        alert('Transactions cleared.'); calcStorage();
+      }
+    });
+    document.getElementById('clear-receipts').addEventListener('click', () => {
+      if (confirm('Clear all receipts? This cannot be undone.')) {
+        localStorage.setItem('mhub_receipts', '[]');
+        alert('Receipts cleared.'); calcStorage();
+      }
+    });
+
+    // ===== Helpers =====
+    function showSaveMsg(id) {
+      const el = document.getElementById(id);
+      el.style.display = 'inline';
+      el.textContent = 'Settings saved!';
+      el.style.color = 'var(--success)';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function showResult(el, msg, type) {
+      el.style.display = 'block';
+      el.textContent = msg;
+      el.style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
+      el.style.background = type === 'success' ? 'var(--success-light)' : 'var(--danger-light)';
+      el.style.padding = '0.75rem';
+      el.style.borderRadius = 'var(--radius-sm)';
+    }
+
+    // ===== Init =====
+    loadSettings();
+    renderSessions();
+    calcStorage();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

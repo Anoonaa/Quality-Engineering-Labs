@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet - MerchantHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="customers.html" class="nav-link" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link active" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="wallet"></i> Merchant Wallet</h1>
+      <p class="page-desc">Manage your merchant wallet — top up, track spending, view wallet history, and simulate transfers.</p>
+    </section>
+
+    <!-- Big Balance Card -->
+    <div class="wallet-hero" data-testid="wallet-hero">
+      <div class="wallet-hero-card">
+        <div class="wallet-hero-label">Available Balance</div>
+        <div class="wallet-hero-amount" id="wallet-balance" data-testid="wallet-balance">R0.00</div>
+        <div class="wallet-hero-actions">
+          <button class="btn btn-accent btn-wallet-action" id="topup-btn" data-testid="topup-btn">
+            <i data-lucide="plus-circle"></i> Top Up
+          </button>
+          <button class="btn btn-outline-light btn-wallet-action" id="transfer-btn" data-testid="transfer-btn">
+            <i data-lucide="send"></i> Transfer
+          </button>
+          <button class="btn btn-outline-light btn-wallet-action" id="withdraw-btn" data-testid="withdraw-btn">
+            <i data-lucide="download"></i> Withdraw
+          </button>
+        </div>
+      </div>
+      <div class="wallet-hero-chart">
+        <canvas id="walletChart" data-testid="wallet-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="txn-stats-banner" data-testid="wallet-stats">
+      <div class="txn-stat-card">
+        <i data-lucide="trending-up"></i>
+        <div>
+          <span class="txn-stat-label">Commission Earned</span>
+          <span class="txn-stat-value stat-positive" id="stat-commission" data-testid="stat-commission">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="shopping-cart"></i>
+        <div>
+          <span class="txn-stat-label">Total Spent</span>
+          <span class="txn-stat-value" id="stat-spent" data-testid="stat-spent">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="arrow-up-circle"></i>
+        <div>
+          <span class="txn-stat-label">Total Top-Ups</span>
+          <span class="txn-stat-value" id="stat-topups" data-testid="stat-topups">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="repeat"></i>
+        <div>
+          <span class="txn-stat-label">Wallet Transactions</span>
+          <span class="txn-stat-value" id="stat-wallet-txns" data-testid="stat-wallet-txns">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Up Panel -->
+    <div class="wallet-panel" id="topup-panel" data-testid="topup-panel" style="display:none;">
+      <div class="wallet-panel-header">
+        <h3><i data-lucide="plus-circle"></i> Top Up Wallet</h3>
+        <button class="btn btn-icon" id="close-topup" data-testid="close-topup"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-panel-body">
+        <label>Select Amount</label>
+        <div class="wallet-amount-grid">
+          <button class="btn btn-outline wallet-amt-btn" data-amount="50">R50</button>
+          <button class="btn btn-outline wallet-amt-btn" data-amount="100">R100</button>
+          <button class="btn btn-outline wallet-amt-btn" data-amount="250">R250</button>
+          <button class="btn btn-outline wallet-amt-btn" data-amount="500">R500</button>
+          <button class="btn btn-outline wallet-amt-btn" data-amount="1000">R1,000</button>
+          <button class="btn btn-outline wallet-amt-btn" data-amount="5000">R5,000</button>
+        </div>
+        <label>Or Enter Custom Amount</label>
+        <input type="number" id="topup-amount" data-testid="topup-amount" class="input" placeholder="Enter amount (R)" min="10" />
+        <label>Top-Up Method</label>
+        <div class="wallet-method-grid">
+          <label class="wallet-method-card">
+            <input type="radio" name="topup-method" value="voucher" checked data-testid="method-voucher" />
+            <i data-lucide="ticket"></i>
+            <span>Voucher PIN</span>
+          </label>
+          <label class="wallet-method-card">
+            <input type="radio" name="topup-method" value="bank" data-testid="method-bank" />
+            <i data-lucide="landmark"></i>
+            <span>Bank Transfer</span>
+          </label>
+          <label class="wallet-method-card">
+            <input type="radio" name="topup-method" value="card" data-testid="method-card" />
+            <i data-lucide="credit-card"></i>
+            <span>Card</span>
+          </label>
+          <label class="wallet-method-card">
+            <input type="radio" name="topup-method" value="eft" data-testid="method-eft" />
+            <i data-lucide="building"></i>
+            <span>EFT</span>
+          </label>
+        </div>
+        <div id="voucher-pin-group" data-testid="voucher-pin-group">
+          <label>Voucher PIN</label>
+          <input type="text" id="topup-pin" data-testid="topup-pin" class="input" placeholder="Enter 16-digit voucher PIN" maxlength="19" />
+        </div>
+        <div class="wallet-panel-result" id="topup-result" data-testid="topup-result" style="display:none;"></div>
+        <div class="form-actions" style="margin-top:1rem;">
+          <button class="btn btn-primary" id="process-topup" data-testid="process-topup"><i data-lucide="check"></i> Process Top-Up</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer Panel -->
+    <div class="wallet-panel" id="transfer-panel" data-testid="transfer-panel" style="display:none;">
+      <div class="wallet-panel-header">
+        <h3><i data-lucide="send"></i> Transfer Funds</h3>
+        <button class="btn btn-icon" id="close-transfer" data-testid="close-transfer"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-panel-body">
+        <div class="form-group">
+          <label>Recipient Phone</label>
+          <input type="tel" id="transfer-phone" data-testid="transfer-phone" class="input" placeholder="e.g. 072 345 6789" />
+        </div>
+        <div class="form-group">
+          <label>Amount (R)</label>
+          <input type="number" id="transfer-amount" data-testid="transfer-amount" class="input" placeholder="Enter amount" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Note (optional)</label>
+          <input type="text" id="transfer-note" data-testid="transfer-note" class="input" placeholder="Payment note..." />
+        </div>
+        <div class="wallet-panel-result" id="transfer-result" data-testid="transfer-result" style="display:none;"></div>
+        <div class="form-actions" style="margin-top:1rem;">
+          <button class="btn btn-primary" id="process-transfer" data-testid="process-transfer"><i data-lucide="send"></i> Send Transfer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdraw Panel -->
+    <div class="wallet-panel" id="withdraw-panel" data-testid="withdraw-panel" style="display:none;">
+      <div class="wallet-panel-header">
+        <h3><i data-lucide="download"></i> Withdraw to Bank</h3>
+        <button class="btn btn-icon" id="close-withdraw" data-testid="close-withdraw"><i data-lucide="x"></i></button>
+      </div>
+      <div class="wallet-panel-body">
+        <div class="form-group">
+          <label>Bank</label>
+          <select id="withdraw-bank" data-testid="withdraw-bank" class="input select">
+            <option value="">Select bank...</option>
+            <option value="FNB">FNB</option>
+            <option value="Nedbank">Nedbank</option>
+            <option value="Standard Bank">Standard Bank</option>
+            <option value="ABSA">ABSA</option>
+            <option value="Capitec">Capitec</option>
+            <option value="TymeBank">TymeBank</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Account Number</label>
+          <input type="text" id="withdraw-account" data-testid="withdraw-account" class="input" placeholder="Enter account number" />
+        </div>
+        <div class="form-group">
+          <label>Amount (R)</label>
+          <input type="number" id="withdraw-amount" data-testid="withdraw-amount" class="input" placeholder="Enter amount" min="50" />
+        </div>
+        <div class="wallet-panel-result" id="withdraw-result" data-testid="withdraw-result" style="display:none;"></div>
+        <div class="form-actions" style="margin-top:1rem;">
+          <button class="btn btn-primary" id="process-withdraw" data-testid="process-withdraw"><i data-lucide="download"></i> Request Withdrawal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet Activity Log -->
+    <div class="chart-card" data-testid="wallet-activity" style="margin-top:2rem;">
+      <div class="chart-card-header">
+        <h3><i data-lucide="clock"></i> Wallet Activity</h3>
+      </div>
+      <div class="wallet-activity-list" id="wallet-activity-list" data-testid="wallet-activity-list"></div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ===== Refresh balance display =====
+    function refreshWallet() {
+      const wallet = FlashDB.getWallet();
+      document.getElementById('wallet-balance').textContent = 'R' + wallet.balance.toLocaleString('en-ZA', { minimumFractionDigits: 2 });
+    }
+
+    // ===== Stats =====
+    function refreshWalletStats() {
+      const txns = FlashDB.getTransactions();
+      const sales = txns.filter(t => t.type === 'sale');
+      const stocks = txns.filter(t => t.type === 'stock');
+      const commission = sales.reduce((s, t) => s + ((t.amount || 0) * 0.05), 0);
+      const spent = stocks.reduce((s, t) => s + (t.amount || 0), 0);
+      const topups = txns.filter(t => t.description && t.description.includes('Top-Up')).reduce((s, t) => s + (t.amount || 0), 0);
+
+      document.getElementById('stat-commission').textContent = 'R' + commission.toFixed(2);
+      document.getElementById('stat-spent').textContent = 'R' + spent.toFixed(2);
+      document.getElementById('stat-topups').textContent = 'R' + topups.toFixed(2);
+      document.getElementById('stat-wallet-txns').textContent = txns.length;
+    }
+
+    // ===== Mini Wallet Chart =====
+    function buildWalletChart() {
+      const txns = FlashDB.getTransactions();
+      const now = new Date();
+      const labels = [];
+      const inflow = [];
+      const outflow = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now); d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        labels.push(d.toLocaleDateString('en-ZA', { day: '2-digit', month: 'short' }));
+        const dayIn = txns.filter(t => t.type === 'sale' && t.timestamp && t.timestamp.slice(0, 10) === key).reduce((s, t) => s + (t.amount || 0), 0);
+        const dayOut = txns.filter(t => t.type === 'stock' && t.timestamp && t.timestamp.slice(0, 10) === key).reduce((s, t) => s + (t.amount || 0), 0);
+        inflow.push(dayIn);
+        outflow.push(dayOut);
+      }
+
+      const ctx = document.getElementById('walletChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Inflow', data: inflow, backgroundColor: 'rgba(45,138,78,0.7)', borderRadius: 4 },
+            { label: 'Outflow', data: outflow, backgroundColor: 'rgba(197,48,48,0.5)', borderRadius: 4 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { padding: 8, usePointStyle: true, pointStyle: 'circle', font: { size: 10 } } } },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => 'R' + v, font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // ===== Wallet Activity Log =====
+    function renderWalletActivity() {
+      const txns = FlashDB.getTransactions().slice(0, 15);
+      const list = document.getElementById('wallet-activity-list');
+
+      if (txns.length === 0) {
+        list.innerHTML = '<p class="text-muted" style="padding:1rem;">No wallet activity yet.</p>';
+        return;
+      }
+
+      list.innerHTML = txns.map((t, i) => {
+        const isInflow = t.type === 'sale' || (t.description && t.description.includes('Top-Up'));
+        const icon = isInflow ? 'arrow-down-left' : 'arrow-up-right';
+        const cls = isInflow ? 'wallet-activity-in' : 'wallet-activity-out';
+        const sign = isInflow ? '+' : '-';
+        const time = t.timestamp ? new Date(t.timestamp).toLocaleString('en-ZA', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+
+        return '<div class="wallet-activity-item ' + cls + '" data-testid="wallet-activity-' + i + '">' +
+          '<div class="wallet-activity-icon"><i data-lucide="' + icon + '"></i></div>' +
+          '<div class="wallet-activity-info">' +
+            '<span class="wallet-activity-desc">' + (t.description || 'Transaction') + '</span>' +
+            '<span class="wallet-activity-time">' + time + '</span>' +
+          '</div>' +
+          '<span class="wallet-activity-amount ' + cls + '">' + sign + 'R' + (t.amount || 0).toFixed(2) + '</span>' +
+        '</div>';
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // ===== Panel Toggles =====
+    function closePanels() {
+      document.getElementById('topup-panel').style.display = 'none';
+      document.getElementById('transfer-panel').style.display = 'none';
+      document.getElementById('withdraw-panel').style.display = 'none';
+    }
+
+    document.getElementById('topup-btn').addEventListener('click', () => {
+      closePanels();
+      document.getElementById('topup-panel').style.display = 'block';
+      lucide.createIcons();
+    });
+    document.getElementById('transfer-btn').addEventListener('click', () => {
+      closePanels();
+      document.getElementById('transfer-panel').style.display = 'block';
+      lucide.createIcons();
+    });
+    document.getElementById('withdraw-btn').addEventListener('click', () => {
+      closePanels();
+      document.getElementById('withdraw-panel').style.display = 'block';
+      lucide.createIcons();
+    });
+    document.getElementById('close-topup').addEventListener('click', closePanels);
+    document.getElementById('close-transfer').addEventListener('click', closePanels);
+    document.getElementById('close-withdraw').addEventListener('click', closePanels);
+
+    // Quick amount buttons
+    document.querySelectorAll('.wallet-amt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.wallet-amt-btn').forEach(b => b.classList.remove('btn-primary'));
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+        document.getElementById('topup-amount').value = btn.dataset.amount;
+      });
+    });
+
+    // Toggle voucher PIN visibility
+    document.querySelectorAll('input[name="topup-method"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.getElementById('voucher-pin-group').style.display = radio.value === 'voucher' ? 'block' : 'none';
+      });
+    });
+
+    // ===== Process Top-Up =====
+    document.getElementById('process-topup').addEventListener('click', () => {
+      const amount = parseFloat(document.getElementById('topup-amount').value);
+      const method = document.querySelector('input[name="topup-method"]:checked').value;
+      const pin = document.getElementById('topup-pin').value.replace(/\s/g, '');
+      const result = document.getElementById('topup-result');
+
+      if (isNaN(amount) || amount < 10) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Minimum top-up is R10'; return;
+      }
+      if (method === 'voucher' && pin.length < 16) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Enter a valid 16-digit voucher PIN'; return;
+      }
+
+      FlashDB.adjustWallet(amount);
+      FlashDB.addTransaction({ description: 'Wallet Top-Up via ' + method + ' +R' + amount.toFixed(2), amount: amount, type: 'stock', category: 'other' });
+
+      result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
+      result.textContent = 'Top-up successful! +R' + amount.toLocaleString('en-ZA') + ' added via ' + method;
+      document.getElementById('topup-amount').value = '';
+      document.getElementById('topup-pin').value = '';
+
+      refreshAll();
+    });
+
+    // ===== Process Transfer =====
+    document.getElementById('process-transfer').addEventListener('click', () => {
+      const phone = document.getElementById('transfer-phone').value.replace(/\s/g, '');
+      const amount = parseFloat(document.getElementById('transfer-amount').value);
+      const note = document.getElementById('transfer-note').value.trim();
+      const result = document.getElementById('transfer-result');
+      const wallet = FlashDB.getWallet();
+
+      if (!phone || phone.length < 10) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Enter a valid phone number'; return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Enter a valid amount'; return;
+      }
+      if (wallet.balance < amount) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+      }
+
+      FlashDB.adjustWallet(-amount);
+      FlashDB.addTransaction({ description: 'Transfer to ' + phone + (note ? ' — ' + note : ''), amount: amount, type: 'stock', category: 'other' });
+      FlashDB.recordCustomerPurchase(phone, amount);
+
+      result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
+      result.textContent = 'Transfer of R' + amount.toFixed(2) + ' sent to ' + phone;
+      document.getElementById('transfer-phone').value = '';
+      document.getElementById('transfer-amount').value = '';
+      document.getElementById('transfer-note').value = '';
+
+      refreshAll();
+    });
+
+    // ===== Process Withdrawal =====
+    document.getElementById('process-withdraw').addEventListener('click', () => {
+      const bank = document.getElementById('withdraw-bank').value;
+      const account = document.getElementById('withdraw-account').value.trim();
+      const amount = parseFloat(document.getElementById('withdraw-amount').value);
+      const result = document.getElementById('withdraw-result');
+      const wallet = FlashDB.getWallet();
+
+      if (!bank) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Select a bank'; return;
+      }
+      if (!account) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Enter your account number'; return;
+      }
+      if (isNaN(amount) || amount < 50) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Minimum withdrawal is R50'; return;
+      }
+      if (wallet.balance < amount) {
+        result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+      }
+
+      FlashDB.adjustWallet(-amount);
+      FlashDB.addTransaction({ description: 'Withdrawal to ' + bank + ' (****' + account.slice(-4) + ')', amount: amount, type: 'stock', category: 'other' });
+
+      result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
+      result.textContent = 'Withdrawal of R' + amount.toFixed(2) + ' to ' + bank + ' requested. ETA: 1-2 business days.';
+      document.getElementById('withdraw-bank').value = '';
+      document.getElementById('withdraw-account').value = '';
+      document.getElementById('withdraw-amount').value = '';
+
+      refreshAll();
+    });
+
+    // ===== Refresh all =====
+    function refreshAll() {
+      refreshWallet();
+      refreshWalletStats();
+      renderWalletActivity();
+    }
+
+    // Init
+    refreshAll();
+    buildWalletChart();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

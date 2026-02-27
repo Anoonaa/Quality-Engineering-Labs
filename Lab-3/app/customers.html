@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers - MerchantHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand"><span class="brand-text">MerchantHub</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link" data-page="home">Home</a></li>
+      <li><a href="market.html" class="nav-link" data-page="market">Products</a></li>
+      <li><a href="payment.html" class="nav-link" data-page="payment">Sell</a></li>
+      <li><a href="transactions.html" class="nav-link" data-page="transactions">Transactions</a></li>
+      <li><a href="customers.html" class="nav-link active" data-page="customers">Customers</a></li>
+      <li><a href="analytics.html" class="nav-link" data-page="analytics">Analytics</a></li>
+      <li><a href="wallet.html" class="nav-link" data-page="wallet">Wallet</a></li>
+      <li><a href="receipts.html" class="nav-link" data-page="receipts">Receipts</a></li>
+      <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
+      <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user">
+      <span id="nav-username" data-testid="nav-username"></span>
+      <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="page-header">
+      <h1 data-testid="page-title"><i data-lucide="users"></i> Customer Directory</h1>
+      <p class="page-desc">Manage your customers — view spending history, add new customers, and track loyalty. Customer data persists across the platform.</p>
+    </section>
+
+    <!-- Stats Row -->
+    <div class="txn-stats-banner" data-testid="customer-stats">
+      <div class="txn-stat-card">
+        <i data-lucide="users"></i>
+        <div>
+          <span class="txn-stat-label">Total Customers</span>
+          <span class="txn-stat-value" id="stat-total-customers" data-testid="stat-total-customers">0</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="trending-up"></i>
+        <div>
+          <span class="txn-stat-label">Total Spend</span>
+          <span class="txn-stat-value" id="stat-total-spend" data-testid="stat-total-spend">R0.00</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="star"></i>
+        <div>
+          <span class="txn-stat-label">Top Spender</span>
+          <span class="txn-stat-value" id="stat-top-spender" data-testid="stat-top-spender">—</span>
+        </div>
+      </div>
+      <div class="txn-stat-card">
+        <i data-lucide="activity"></i>
+        <div>
+          <span class="txn-stat-label">Avg Transactions</span>
+          <span class="txn-stat-value" id="stat-avg-txns" data-testid="stat-avg-txns">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="customer-toolbar" data-testid="customer-toolbar">
+      <input type="text" id="cust-search" data-testid="cust-search" class="input" placeholder="Search by name, phone, or email..." />
+      <select id="cust-sort" data-testid="cust-sort" class="input select">
+        <option value="name">Name A-Z</option>
+        <option value="spend-desc">Top Spenders</option>
+        <option value="spend-asc">Lowest Spend</option>
+        <option value="recent">Most Recent</option>
+        <option value="txns">Most Transactions</option>
+      </select>
+      <button class="btn btn-primary" id="add-cust-btn" data-testid="add-cust-btn">
+        <i data-lucide="user-plus"></i> Add Customer
+      </button>
+    </div>
+
+    <!-- Add Customer Form (hidden by default) -->
+    <div class="cust-form-card" id="cust-form-card" data-testid="cust-form-card" style="display:none;">
+      <h3 id="cust-form-title"><i data-lucide="user-plus"></i> Add New Customer</h3>
+      <div class="cust-form-grid">
+        <div class="form-group">
+          <label for="cust-name">Full Name <span class="required">*</span></label>
+          <input type="text" id="cust-name" data-testid="cust-name" class="input" placeholder="e.g. Thabo Mokoena" required />
+        </div>
+        <div class="form-group">
+          <label for="cust-phone">Phone <span class="required">*</span></label>
+          <input type="tel" id="cust-phone" data-testid="cust-phone" class="input" placeholder="e.g. 072 345 6789" required />
+        </div>
+        <div class="form-group">
+          <label for="cust-email">Email</label>
+          <input type="email" id="cust-email" data-testid="cust-email" class="input" placeholder="e.g. name@email.co.za" />
+        </div>
+        <div class="form-group">
+          <label for="cust-notes">Notes</label>
+          <input type="text" id="cust-notes" data-testid="cust-notes" class="input" placeholder="e.g. Prefers Vodacom products" />
+        </div>
+      </div>
+      <span class="form-error" id="cust-error" data-testid="cust-error" style="display:none;"></span>
+      <div class="form-actions" style="margin-top:1rem;">
+        <button class="btn btn-primary" id="save-cust-btn" data-testid="save-cust-btn"><i data-lucide="check"></i> Save Customer</button>
+        <button class="btn btn-outline" id="cancel-cust-btn" data-testid="cancel-cust-btn">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Customer Grid -->
+    <div class="customer-grid" id="customer-grid" data-testid="customer-grid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="cust-empty" data-testid="cust-empty" style="display:none;">
+      <i data-lucide="users"></i>
+      <p>No customers found. Add your first customer above!</p>
+    </div>
+
+    <!-- Customer Detail Modal -->
+    <div class="modal-overlay" id="cust-modal" data-testid="cust-modal" style="display:none;">
+      <div class="modal-card modal-card-lg">
+        <div class="cust-detail-header" id="cust-detail-header" data-testid="cust-detail-header"></div>
+        <div class="cust-detail-body" id="cust-detail-body" data-testid="cust-detail-body"></div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" id="close-cust-modal" data-testid="close-cust-modal">Close</button>
+          <button class="btn btn-outline btn-danger" id="delete-cust-btn" data-testid="delete-cust-btn"><i data-lucide="trash-2"></i> Remove</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let editingId = null;
+    let viewingId = null;
+
+    // ===== Stats =====
+    function refreshStats() {
+      const customers = FlashDB.getCustomers();
+      const totalSpend = customers.reduce((s, c) => s + (c.totalSpend || 0), 0);
+      const totalTxns = customers.reduce((s, c) => s + (c.transactions || 0), 0);
+      const top = customers.length > 0
+        ? customers.reduce((a, b) => (a.totalSpend || 0) > (b.totalSpend || 0) ? a : b)
+        : null;
+
+      document.getElementById('stat-total-customers').textContent = customers.length;
+      document.getElementById('stat-total-spend').textContent = 'R' + totalSpend.toLocaleString('en-ZA', { minimumFractionDigits: 2 });
+      document.getElementById('stat-top-spender').textContent = top ? top.name : '—';
+      document.getElementById('stat-avg-txns').textContent = customers.length > 0
+        ? (totalTxns / customers.length).toFixed(1)
+        : '0';
+    }
+
+    // ===== Render Customers =====
+    function renderCustomers() {
+      const search = document.getElementById('cust-search').value.toLowerCase().trim();
+      const sort = document.getElementById('cust-sort').value;
+      let customers = FlashDB.getCustomers();
+
+      // Search
+      if (search) {
+        customers = customers.filter(c =>
+          c.name.toLowerCase().includes(search) ||
+          c.phone.replace(/\s/g, '').includes(search.replace(/\s/g, '')) ||
+          (c.email && c.email.toLowerCase().includes(search))
+        );
+      }
+
+      // Sort
+      if (sort === 'name') customers.sort((a, b) => a.name.localeCompare(b.name));
+      else if (sort === 'spend-desc') customers.sort((a, b) => (b.totalSpend || 0) - (a.totalSpend || 0));
+      else if (sort === 'spend-asc') customers.sort((a, b) => (a.totalSpend || 0) - (b.totalSpend || 0));
+      else if (sort === 'recent') customers.sort((a, b) => new Date(b.created) - new Date(a.created));
+      else if (sort === 'txns') customers.sort((a, b) => (b.transactions || 0) - (a.transactions || 0));
+
+      const grid = document.getElementById('customer-grid');
+      const empty = document.getElementById('cust-empty');
+
+      if (customers.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'flex';
+        return;
+      }
+      empty.style.display = 'none';
+
+      grid.innerHTML = customers.map((c, i) => {
+        const tierClass = (c.totalSpend || 0) >= 3000 ? 'tier-gold' : (c.totalSpend || 0) >= 1000 ? 'tier-silver' : 'tier-bronze';
+        const tierLabel = (c.totalSpend || 0) >= 3000 ? 'Gold' : (c.totalSpend || 0) >= 1000 ? 'Silver' : 'Bronze';
+        const joined = c.created ? new Date(c.created).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+
+        return '<div class="customer-card" data-testid="customer-card-' + i + '" data-id="' + c.id + '">' +
+          '<div class="customer-card-top">' +
+            '<img class="customer-avatar" src="' + (c.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(c.name) + '&background=c9a96e&color=fff&size=80') + '" alt="' + c.name + '" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(c.name) + '&background=c9a96e&color=fff&size=80\'" />' +
+            '<span class="customer-tier ' + tierClass + '">' + tierLabel + '</span>' +
+          '</div>' +
+          '<div class="customer-card-body">' +
+            '<h3 class="customer-name" data-testid="cust-name-' + i + '">' + c.name + '</h3>' +
+            '<div class="customer-contact">' +
+              '<span><i data-lucide="phone"></i> ' + c.phone + '</span>' +
+              (c.email ? '<span><i data-lucide="mail"></i> ' + c.email + '</span>' : '') +
+            '</div>' +
+            '<div class="customer-stats-row">' +
+              '<div class="customer-stat"><span class="customer-stat-val">R' + (c.totalSpend || 0).toLocaleString('en-ZA') + '</span><span class="customer-stat-lbl">Spent</span></div>' +
+              '<div class="customer-stat"><span class="customer-stat-val">' + (c.transactions || 0) + '</span><span class="customer-stat-lbl">Orders</span></div>' +
+              '<div class="customer-stat"><span class="customer-stat-val">' + joined + '</span><span class="customer-stat-lbl">Joined</span></div>' +
+            '</div>' +
+            (c.notes ? '<p class="customer-notes"><i data-lucide="file-text"></i> ' + c.notes + '</p>' : '') +
+          '</div>' +
+          '<div class="customer-card-actions">' +
+            '<button class="btn btn-sm btn-outline view-cust" data-id="' + c.id + '" data-testid="view-cust-' + i + '"><i data-lucide="eye"></i> View</button>' +
+            '<button class="btn btn-sm btn-outline edit-cust" data-id="' + c.id + '" data-testid="edit-cust-' + i + '"><i data-lucide="pencil"></i> Edit</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      // Attach events
+      grid.querySelectorAll('.view-cust').forEach(btn => {
+        btn.addEventListener('click', () => openCustomerDetail(btn.dataset.id));
+      });
+      grid.querySelectorAll('.edit-cust').forEach(btn => {
+        btn.addEventListener('click', () => openEditForm(btn.dataset.id));
+      });
+
+      lucide.createIcons();
+    }
+
+    // ===== Add Customer Form =====
+    document.getElementById('add-cust-btn').addEventListener('click', () => {
+      editingId = null;
+      document.getElementById('cust-form-title').innerHTML = '<i data-lucide="user-plus"></i> Add New Customer';
+      document.getElementById('cust-name').value = '';
+      document.getElementById('cust-phone').value = '';
+      document.getElementById('cust-email').value = '';
+      document.getElementById('cust-notes').value = '';
+      document.getElementById('cust-error').style.display = 'none';
+      document.getElementById('cust-form-card').style.display = 'block';
+      document.getElementById('cust-name').focus();
+      lucide.createIcons();
+    });
+
+    document.getElementById('cancel-cust-btn').addEventListener('click', () => {
+      document.getElementById('cust-form-card').style.display = 'none';
+      editingId = null;
+    });
+
+    function openEditForm(id) {
+      const c = FlashDB.getCustomerById(id);
+      if (!c) return;
+      editingId = id;
+      document.getElementById('cust-form-title').innerHTML = '<i data-lucide="pencil"></i> Edit Customer';
+      document.getElementById('cust-name').value = c.name;
+      document.getElementById('cust-phone').value = c.phone;
+      document.getElementById('cust-email').value = c.email || '';
+      document.getElementById('cust-notes').value = c.notes || '';
+      document.getElementById('cust-error').style.display = 'none';
+      document.getElementById('cust-form-card').style.display = 'block';
+      document.getElementById('cust-name').focus();
+      lucide.createIcons();
+    }
+
+    document.getElementById('save-cust-btn').addEventListener('click', () => {
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const email = document.getElementById('cust-email').value.trim();
+      const notes = document.getElementById('cust-notes').value.trim();
+      const errorEl = document.getElementById('cust-error');
+
+      if (!name) { errorEl.textContent = 'Name is required'; errorEl.style.display = 'block'; return; }
+      if (!phone || phone.replace(/\s/g, '').length < 10) { errorEl.textContent = 'Valid phone number required'; errorEl.style.display = 'block'; return; }
+
+      errorEl.style.display = 'none';
+
+      if (editingId) {
+        FlashDB.updateCustomer(editingId, { name, phone, email, notes });
+      } else {
+        FlashDB.addCustomer({ name, phone, email, notes });
+      }
+
+      document.getElementById('cust-form-card').style.display = 'none';
+      editingId = null;
+      refreshStats();
+      renderCustomers();
+    });
+
+    // ===== Customer Detail Modal =====
+    function openCustomerDetail(id) {
+      const c = FlashDB.getCustomerById(id);
+      if (!c) return;
+      viewingId = id;
+
+      const tierClass = (c.totalSpend || 0) >= 3000 ? 'tier-gold' : (c.totalSpend || 0) >= 1000 ? 'tier-silver' : 'tier-bronze';
+      const tierLabel = (c.totalSpend || 0) >= 3000 ? 'Gold' : (c.totalSpend || 0) >= 1000 ? 'Silver' : 'Bronze';
+
+      document.getElementById('cust-detail-header').innerHTML =
+        '<img class="cust-detail-avatar" src="' + c.avatar + '" alt="' + c.name + '" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(c.name) + '&background=c9a96e&color=fff&size=120\'" />' +
+        '<div class="cust-detail-info">' +
+          '<h2>' + c.name + ' <span class="customer-tier ' + tierClass + '">' + tierLabel + '</span></h2>' +
+          '<p><i data-lucide="phone"></i> ' + c.phone + '</p>' +
+          (c.email ? '<p><i data-lucide="mail"></i> ' + c.email + '</p>' : '') +
+          (c.notes ? '<p><i data-lucide="file-text"></i> ' + c.notes + '</p>' : '') +
+        '</div>';
+
+      // Customer stats
+      const avgSpend = c.transactions > 0 ? (c.totalSpend / c.transactions).toFixed(2) : '0.00';
+      document.getElementById('cust-detail-body').innerHTML =
+        '<div class="cust-detail-stats">' +
+          '<div class="cust-detail-stat"><span class="cust-detail-stat-val">R' + (c.totalSpend || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2 }) + '</span><span class="cust-detail-stat-lbl">Total Spend</span></div>' +
+          '<div class="cust-detail-stat"><span class="cust-detail-stat-val">' + (c.transactions || 0) + '</span><span class="cust-detail-stat-lbl">Transactions</span></div>' +
+          '<div class="cust-detail-stat"><span class="cust-detail-stat-val">R' + avgSpend + '</span><span class="cust-detail-stat-lbl">Avg Order</span></div>' +
+          '<div class="cust-detail-stat"><span class="cust-detail-stat-val">' + (c.created ? new Date(c.created).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' }) : '—') + '</span><span class="cust-detail-stat-lbl">Member Since</span></div>' +
+        '</div>';
+
+      document.getElementById('cust-modal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    document.getElementById('close-cust-modal').addEventListener('click', () => {
+      document.getElementById('cust-modal').style.display = 'none';
+      viewingId = null;
+    });
+
+    document.getElementById('delete-cust-btn').addEventListener('click', () => {
+      if (!viewingId) return;
+      if (confirm('Remove this customer? This cannot be undone.')) {
+        FlashDB.deleteCustomer(viewingId);
+        document.getElementById('cust-modal').style.display = 'none';
+        viewingId = null;
+        refreshStats();
+        renderCustomers();
+      }
+    });
+
+    // Close modal on overlay click
+    document.getElementById('cust-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'cust-modal') {
+        document.getElementById('cust-modal').style.display = 'none';
+        viewingId = null;
+      }
+    });
+
+    // ===== Search & Sort =====
+    document.getElementById('cust-search').addEventListener('input', renderCustomers);
+    document.getElementById('cust-sort').addEventListener('change', renderCustomers);
+
+    // ===== Init =====
+    refreshStats();
+    renderCustomers();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

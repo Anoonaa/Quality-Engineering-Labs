@@ -1,4 +1,5 @@
 // Shared app.js - handles auth state display in navbar across all pages
+// MerchantHub - Inspired by MerchantHub (merchanthub.example)
 
 (function () {
   // Initialize Lucide icons
@@ -14,7 +15,7 @@
     const logoutBtn = document.getElementById('nav-logout');
 
     if (token && user && usernameEl && logoutBtn) {
-      usernameEl.textContent = `Hello, ${user}`;
+      usernameEl.textContent = 'Merchant: ' + user;
       logoutBtn.style.display = 'inline-flex';
     }
   }
