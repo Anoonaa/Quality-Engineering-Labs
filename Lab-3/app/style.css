@@ -637,6 +637,7 @@ a:hover { color: var(--accent); }
   overflow: hidden;
 }
 
+/* Ripple effect uses --ripple-x / --ripple-y set via JS on click; defaults to center */
 .btn::after {
   content: '';
   position: absolute;
@@ -662,7 +663,7 @@ a:hover { color: var(--accent); }
 .btn-primary:hover { 
   background: var(--primary-hover); 
   text-decoration: none; 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
   transform: translateY(-1px);
 }
 .btn-primary:active { transform: translateY(0); }
