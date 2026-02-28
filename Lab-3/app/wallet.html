@@ -427,7 +427,7 @@
       }
 
       FlashDB.adjustWallet(-amount);
-      FlashDB.addTransaction({ description: 'Transfer to ' + phone+ (note ? ' — ' + note : ''), amount: amount, type: 'stock', category: 'other' });
+      FlashDB.addTransaction({ description: 'Transfer to ' + phone + (note ? ' — ' + note : ''), amount: amount, type: 'stock', category: 'other' });
       FlashDB.recordCustomerPurchase(phone, amount);
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
@@ -467,7 +467,7 @@
       }
 
       FlashDB.adjustWallet(-amount);
-      FlashDB.addTransaction({ description: 'Withdrawal to ' + bank+ ' (****' + account.slice(-4) + ')', amount: amount, type: 'stock', category: 'other' });
+      FlashDB.addTransaction({ description: 'Withdrawal to ' + bank + ' (****' + account.slice(-4) + ')', amount: amount, type: 'stock', category: 'other' });
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Withdrawal of R' + amount.toFixed(2) + ' to ' + bank + ' requested. ETA: 1-2 business days.';

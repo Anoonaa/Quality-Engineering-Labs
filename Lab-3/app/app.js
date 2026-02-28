@@ -82,7 +82,7 @@
 
     var closeBtn = document.createElement('button');
     closeBtn.className = 'toast-close';
-    closeBtn.innerHTML = '\u00d7';
+    closeBtn.textContent = '\u00d7';
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.addEventListener('click', function () {
       removeToast(toast);
