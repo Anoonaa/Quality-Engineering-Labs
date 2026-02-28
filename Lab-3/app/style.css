@@ -220,6 +220,7 @@ a:hover { color: var(--accent); }
   margin: 0 auto;
   padding: 2rem 2rem;
   flex: 1;
+  animation: fadeIn 0.5s ease;
 }
 
 /* ===== HERO ===== */
@@ -1608,6 +1609,7 @@ a:hover { color: var(--accent); }
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: transform var(--transition-slow), box-shadow var(--transition-slow), border-color var(--transition);
+  animation: slideUp 0.4s ease both;
 }
 .product-card:hover {
   transform: translateY(-3px);
@@ -2185,12 +2187,12 @@ a:hover { color: var(--accent); }
   padding: 1.5rem 1rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-slow), box-shadow var(--transition-slow), border-color var(--transition);
 }
 .quick-link-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
   border-color: var(--accent);
   color: var(--text);
 }

@@ -188,6 +188,10 @@
       'airtime': 'phone', 'data': 'wifi', '1voucher': 'ticket',
       'electricity': 'zap', 'gaming': 'gamepad-2', 'entertainment': 'tv'
     };
+    const categoryEmoji = {
+      'airtime': '📱', 'data': '📶', '1voucher': '🎫',
+      'electricity': '⚡', 'gaming': '🎮', 'entertainment': '🎬'
+    };
     const categoryColors = {
       'airtime': '#2563eb', 'data': '#7c3aed', '1voucher': '#c9a96e',
       'electricity': '#d97706', 'gaming': '#dc2626', 'entertainment': '#059669'
@@ -230,11 +234,14 @@
         const card = document.createElement('div');
         card.className = 'product-card' + (outOfStock ? ' out-of-stock' : '');
         card.setAttribute('data-testid', 'product-card-' + i);
+        card.style.animationDelay = (i * 0.04) + 's';
+
+        const emoji = categoryEmoji[product.category] || '📦';
 
         card.innerHTML =
           '<div class="product-card-img">' +
             '<img src="' + product.image + '" alt="' + product.provider + '" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(product.provider) + '&background=' + color.replace('#','') + '&color=fff&size=64\'" />' +
-            '<span class="product-card-badge" style="background:' + color + ';">' + product.category.replace('-', ' ') + '</span>' +
+            '<span class="product-card-badge" style="background:' + color + ';">' + emoji + ' ' + product.category.replace('-', ' ') + '</span>' +
           '</div>' +
           '<div class="product-card-body">' +
             '<h3 class="product-card-name" data-testid="product-name-' + i + '">' + product.name + '</h3>' +
