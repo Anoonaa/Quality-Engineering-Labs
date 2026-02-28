@@ -266,6 +266,7 @@
       productsGrid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           FlashDB.addToCart(btn.dataset.id, 1);
+          if (window.showToast) showToast('Added to cart!', 'info', 2000);
           renderProducts();
           updateCartUI();
         });
@@ -392,6 +393,7 @@
 
     document.getElementById('clear-cart-btn').addEventListener('click', () => {
       FlashDB.clearCart();
+      if (window.showToast) showToast('Cart cleared', 'info', 2000);
       renderProducts();
       updateCartUI();
     });
@@ -459,6 +461,7 @@
       // Show receipt
       document.getElementById('checkout-step-review').style.display = 'none';
       document.getElementById('checkout-step-receipt').style.display = 'block';
+      if (window.showToast) showToast('Purchase complete! R' + result.receipt.total.toFixed(2) + ' deducted from wallet.', 'success');
       document.getElementById('checkout-success-msg').textContent = 'R' + result.receipt.total.toFixed(2) + ' deducted from wallet. Ref: ' + result.receipt.ref;
 
       let receiptHtml =

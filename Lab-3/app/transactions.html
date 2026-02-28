@@ -312,6 +312,7 @@
       // Flash success
       const addBtn = document.getElementById('add-txn-btn');
       addBtn.textContent = 'Added!';
+      if (window.showToast) showToast('Transaction added', 'success', 2000);
       addBtn.classList.add('btn-success-flash');
       setTimeout(() => {
         addBtn.innerHTML = '<i data-lucide="plus"></i> Add';

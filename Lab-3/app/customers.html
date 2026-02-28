@@ -309,6 +309,7 @@
       }
 
       document.getElementById('cust-form-card').style.display = 'none';
+      if (window.showToast) showToast(editingId ? 'Customer updated' : 'Customer added', 'success');
       editingId = null;
       refreshStats();
       renderCustomers();
@@ -355,6 +356,7 @@
       if (!viewingId) return;
       if (confirm('Remove this customer? This cannot be undone.')) {
         FlashDB.deleteCustomer(viewingId);
+        if (window.showToast) showToast('Customer removed', 'info');
         document.getElementById('cust-modal').style.display = 'none';
         viewingId = null;
         refreshStats();

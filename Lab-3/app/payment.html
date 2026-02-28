@@ -405,6 +405,7 @@
       document.getElementById('receipt-summary').textContent = 'R' + amount.toFixed(2) + ' sale completed. Commission: R' + receipt.commission.toFixed(2) + ' earned.';
       document.getElementById('sale-form').style.display = 'none';
       document.getElementById('sale-receipt').style.display = 'flex';
+      if (window.showToast) showToast('Sale processed! Commission earned: R' + receipt.commission.toFixed(2), 'success');
       document.getElementById('receipt-details').style.display = 'block';
       document.getElementById('receipt-content').innerHTML = receiptHtml;
       updateUI();

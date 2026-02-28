@@ -380,6 +380,7 @@
         currency: document.getElementById('set-currency').value,
       });
       showSaveMsg('profile-saved');
+      if (window.showToast) showToast('Profile settings saved', 'success');
     });
 
     // ===== Save Notifications =====
@@ -392,6 +393,7 @@
         }
       });
       showSaveMsg('notif-saved');
+      if (window.showToast) showToast('Notification preferences saved', 'success');
     });
 
     // ===== Change PIN =====

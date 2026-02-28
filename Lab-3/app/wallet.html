@@ -397,6 +397,7 @@
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Top-up successful! +R' + amount.toLocaleString('en-ZA') + ' added via ' + method;
+      if (window.showToast) showToast('Wallet topped up +R' + amount.toLocaleString('en-ZA'), 'success');
       document.getElementById('topup-amount').value = '';
       document.getElementById('topup-pin').value = '';
 
@@ -421,15 +422,17 @@
       }
       if (wallet.balance < amount) {
         result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
-        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2);
+        if (window.showToast) showToast('Insufficient funds!', 'error', 4000); return;
       }
 
       FlashDB.adjustWallet(-amount);
-      FlashDB.addTransaction({ description: 'Transfer to ' + phone + (note ? ' — ' + note : ''), amount: amount, type: 'stock', category: 'other' });
+      FlashDB.addTransaction({ description: 'Transfer to ' + phone+ (note ? ' — ' + note : ''), amount: amount, type: 'stock', category: 'other' });
       FlashDB.recordCustomerPurchase(phone, amount);
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Transfer of R' + amount.toFixed(2) + ' sent to ' + phone;
+      if (window.showToast) showToast('Transfer sent to ' + phone, 'success');
       document.getElementById('transfer-phone').value = '';
       document.getElementById('transfer-amount').value = '';
       document.getElementById('transfer-note').value = '';
@@ -459,14 +462,16 @@
       }
       if (wallet.balance < amount) {
         result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
-        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2);
+        if (window.showToast) showToast('Insufficient funds!', 'error', 4000); return;
       }
 
       FlashDB.adjustWallet(-amount);
-      FlashDB.addTransaction({ description: 'Withdrawal to ' + bank + ' (****' + account.slice(-4) + ')', amount: amount, type: 'stock', category: 'other' });
+      FlashDB.addTransaction({ description: 'Withdrawal to ' + bank+ ' (****' + account.slice(-4) + ')', amount: amount, type: 'stock', category: 'other' });
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Withdrawal of R' + amount.toFixed(2) + ' to ' + bank + ' requested. ETA: 1-2 business days.';
+      if (window.showToast) showToast('Withdrawal requested — ETA 1-2 business days', 'success');
       document.getElementById('withdraw-bank').value = '';
       document.getElementById('withdraw-account').value = '';
       document.getElementById('withdraw-amount').value = '';
