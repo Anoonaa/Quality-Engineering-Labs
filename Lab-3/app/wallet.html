@@ -24,6 +24,9 @@
       <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
+      <button class="btn btn-icon btn-sm" id="dark-mode-toggle" data-testid="dark-mode-toggle" aria-label="Toggle dark mode" onclick="toggleDarkMode()">
+        <i data-lucide="moon"></i>
+      </button>
       <span id="nav-username" data-testid="nav-username"></span>
       <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
     </div>
@@ -211,7 +214,29 @@
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-text">MerchantHub</span>
+        <p class="footer-tagline">Digital merchant payment platform</p>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul><li><a href="market.html">Products</a></li><li><a href="payment.html">Sell</a></li><li><a href="wallet.html">Wallet</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Business</h4>
+          <ul><li><a href="transactions.html">Transactions</a></li><li><a href="analytics.html">Analytics</a></li><li><a href="receipts.html">Receipts</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul><li><a href="customers.html">Customers</a></li><li><a href="settings.html">Settings</a></li><li><a href="login.html">Login</a></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+    </div>
   </footer>
 
   <script src="db.js"></script>
@@ -372,6 +397,7 @@
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Top-up successful! +R' + amount.toLocaleString('en-ZA') + ' added via ' + method;
+      if (window.showToast) showToast('Wallet topped up +R' + amount.toLocaleString('en-ZA'), 'success');
       document.getElementById('topup-amount').value = '';
       document.getElementById('topup-pin').value = '';
 
@@ -396,7 +422,8 @@
       }
       if (wallet.balance < amount) {
         result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
-        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2);
+        if (window.showToast) showToast('Insufficient funds!', 'error', 4000); return;
       }
 
       FlashDB.adjustWallet(-amount);
@@ -405,6 +432,7 @@
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Transfer of R' + amount.toFixed(2) + ' sent to ' + phone;
+      if (window.showToast) showToast('Transfer sent to ' + phone, 'success');
       document.getElementById('transfer-phone').value = '';
       document.getElementById('transfer-amount').value = '';
       document.getElementById('transfer-note').value = '';
@@ -434,7 +462,8 @@
       }
       if (wallet.balance < amount) {
         result.style.display = 'block'; result.className = 'wallet-panel-result result-error';
-        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2); return;
+        result.textContent = 'Insufficient funds. Balance: R' + wallet.balance.toFixed(2);
+        if (window.showToast) showToast('Insufficient funds!', 'error', 4000); return;
       }
 
       FlashDB.adjustWallet(-amount);
@@ -442,6 +471,7 @@
 
       result.style.display = 'block'; result.className = 'wallet-panel-result result-success';
       result.textContent = 'Withdrawal of R' + amount.toFixed(2) + ' to ' + bank + ' requested. ETA: 1-2 business days.';
+      if (window.showToast) showToast('Withdrawal requested — ETA 1-2 business days', 'success');
       document.getElementById('withdraw-bank').value = '';
       document.getElementById('withdraw-account').value = '';
       document.getElementById('withdraw-amount').value = '';

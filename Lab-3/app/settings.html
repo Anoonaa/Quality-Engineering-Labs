@@ -23,6 +23,9 @@
       <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
+      <button class="btn btn-icon btn-sm" id="dark-mode-toggle" data-testid="dark-mode-toggle" aria-label="Toggle dark mode" onclick="toggleDarkMode()">
+        <i data-lucide="moon"></i>
+      </button>
       <span id="nav-username" data-testid="nav-username"></span>
       <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
     </div>
@@ -302,7 +305,29 @@
   </main>
 
   <footer class="footer" role="contentinfo">
-    <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-text">MerchantHub</span>
+        <p class="footer-tagline">Digital merchant payment platform</p>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul><li><a href="market.html">Products</a></li><li><a href="payment.html">Sell</a></li><li><a href="wallet.html">Wallet</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Business</h4>
+          <ul><li><a href="transactions.html">Transactions</a></li><li><a href="analytics.html">Analytics</a></li><li><a href="receipts.html">Receipts</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul><li><a href="customers.html">Customers</a></li><li><a href="settings.html">Settings</a></li><li><a href="login.html">Login</a></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
+    </div>
   </footer>
 
   <script src="db.js"></script>
@@ -355,6 +380,7 @@
         currency: document.getElementById('set-currency').value,
       });
       showSaveMsg('profile-saved');
+      if (window.showToast) showToast('Profile settings saved', 'success');
     });
 
     // ===== Save Notifications =====
@@ -367,6 +393,7 @@
         }
       });
       showSaveMsg('notif-saved');
+      if (window.showToast) showToast('Notification preferences saved', 'success');
     });
 
     // ===== Change PIN =====
