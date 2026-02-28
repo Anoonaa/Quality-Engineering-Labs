@@ -24,6 +24,9 @@
       <li><a href="login.html" class="nav-link" data-page="login">Account</a></li>
     </ul>
     <div class="nav-user" id="nav-user">
+      <button class="btn btn-icon btn-sm" id="dark-mode-toggle" data-testid="dark-mode-toggle" aria-label="Toggle dark mode" onclick="toggleDarkMode()">
+        <i data-lucide="moon"></i>
+      </button>
       <span id="nav-username" data-testid="nav-username"></span>
       <button id="nav-logout" data-testid="logout-btn" class="btn btn-sm btn-outline" style="display:none;">Logout</button>
     </div>
@@ -47,29 +50,41 @@
         </div>
       </div>
       <div class="hero-illustration" aria-hidden="true">
-        <svg viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="40" y="30" width="320" height="220" rx="12" fill="#f5f5f3" stroke="#e8e6e1" stroke-width="1.5"/>
-          <rect x="40" y="30" width="320" height="36" rx="12" fill="#1a1a1a"/>
-          <rect x="40" y="54" width="320" height="12" fill="#1a1a1a"/>
-          <circle cx="60" cy="48" r="5" fill="#c53030"/>
-          <circle cx="78" cy="48" r="5" fill="#c9a96e"/>
-          <circle cx="96" cy="48" r="5" fill="#2d8a4e"/>
-          <rect x="160" y="42" width="120" height="12" rx="6" fill="#333"/>
-          <rect x="64" y="86" width="120" height="10" rx="3" fill="#e8e6e1"/>
-          <rect x="64" y="106" width="200" height="8" rx="3" fill="#f0ede8"/>
-          <rect x="64" y="122" width="160" height="8" rx="3" fill="#f0ede8"/>
-          <rect x="64" y="150" width="272" height="36" rx="6" fill="#fff" stroke="#e8e6e1" stroke-width="1"/>
-          <rect x="72" y="158" width="80" height="20" rx="4" fill="#f5f5f3"/>
-          <rect x="64" y="200" width="100" height="32" rx="6" fill="#1a1a1a"/>
-          <rect x="76" y="212" width="76" height="8" rx="3" fill="#fff"/>
-          <rect x="176" y="200" width="80" height="32" rx="6" fill="#fff" stroke="#e8e6e1" stroke-width="1"/>
-          <rect x="188" y="212" width="56" height="8" rx="3" fill="#e8e6e1"/>
-          <line x1="64" y1="146" x2="336" y2="146" stroke="#e8e6e1" stroke-width="1"/>
-          <rect x="300" y="86" width="36" height="36" rx="8" fill="#f0ede8"/>
-          <path d="M312 98 L318 104 L324 98" stroke="#c9a96e" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M312 106 L318 112 L324 106" stroke="#c9a96e" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M290 240 L298 268 L304 258 L316 264 L312 254 L302 254 L290 240Z" fill="#1a1a1a" stroke="#fff" stroke-width="1.5"/>
-        </svg>
+        <div class="hero-card-visual">
+          <div class="hero-credit-card">
+            <div class="hero-card-chip"></div>
+            <div class="hero-card-number">•••• •••• •••• 4289</div>
+            <div class="hero-card-details">
+              <div class="hero-card-name">MERCHANT HUB</div>
+              <div class="hero-card-expiry">12/28</div>
+            </div>
+            <div class="hero-card-logo">
+              <i data-lucide="credit-card" style="width:32px;height:32px;"></i>
+            </div>
+          </div>
+          <div class="hero-floating-stat hero-floating-stat-1">
+            <i data-lucide="trending-up" style="width:16px;height:16px;color:var(--success);"></i>
+            <span>+12.4%</span>
+          </div>
+          <div class="hero-floating-stat hero-floating-stat-2">
+            <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--accent);"></i>
+            <span>Secure</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="partners-section" data-testid="partners-section">
+      <div class="container">
+        <p class="partners-label">Trusted by leading providers</p>
+        <div class="partners-logos">
+          <div class="partner-logo"><img src="https://logo.clearbit.com/vodacom.co.za" alt="Vodacom" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>Vodacom</span></div>
+          <div class="partner-logo"><img src="https://logo.clearbit.com/mtn.co.za" alt="MTN" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>MTN</span></div>
+          <div class="partner-logo"><img src="https://logo.clearbit.com/telkom.co.za" alt="Telkom" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>Telkom</span></div>
+          <div class="partner-logo"><img src="https://logo.clearbit.com/playstation.com" alt="PlayStation" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>PlayStation</span></div>
+          <div class="partner-logo"><img src="https://logo.clearbit.com/steampowered.com" alt="Steam" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>Steam</span></div>
+          <div class="partner-logo"><img src="https://logo.clearbit.com/showmax.com" alt="Showmax" loading="lazy" onerror="this.parentElement.style.display='none'" /><span>Showmax</span></div>
+        </div>
       </div>
     </section>
 
@@ -78,7 +93,7 @@
       <div class="container">
         <div class="about-grid">
           <div class="about-text">
-            <h2 class="about-heading">Making Life Easier</h2>
+            <h2 class="about-heading">Powering Merchant Success</h2>
             <p class="about-description">
               MerchantHub is a modern merchant payment platform simulating real fintech workflows — digital product distribution, customer management, and point-of-sale operations.
               This playground simulates merchant workflows — sell airtime &amp; data, process 1Voucher transactions, handle cash-outs,
@@ -167,6 +182,42 @@
 
       <div class="divider"></div>
 
+      <section class="features-highlight" data-testid="features-highlight">
+        <h2 class="section-title">Why Merchants Choose Us</h2>
+        <div class="features-grid">
+          <div class="feature-card glass-card">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #2563eb, #7c3aed);">
+              <i data-lucide="zap"></i>
+            </div>
+            <h3>Instant Processing</h3>
+            <p>Process airtime, data bundles, and voucher sales in under 2 seconds with real-time wallet updates.</p>
+          </div>
+          <div class="feature-card glass-card">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #059669, #2d8a4e);">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <h3>Secure Transactions</h3>
+            <p>Every transaction is logged, traceable, and protected with merchant PIN verification.</p>
+          </div>
+          <div class="feature-card glass-card">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #c9a96e, #d97706);">
+              <i data-lucide="bar-chart-3"></i>
+            </div>
+            <h3>Real-time Analytics</h3>
+            <p>Track revenue, top products, customer behavior, and performance trends with live dashboards.</p>
+          </div>
+          <div class="feature-card glass-card">
+            <div class="feature-icon" style="background: linear-gradient(135deg, #dc2626, #c53030);">
+              <i data-lucide="users"></i>
+            </div>
+            <h3>Customer Management</h3>
+            <p>Build loyalty tiers, track spending history, and manage your customer directory effortlessly.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
       <!-- ===== QUICK LINKS ===== -->
       <section class="quick-links-section" data-testid="quick-links">
         <h2 class="section-title">Explore the Ecosystem</h2>
@@ -219,13 +270,39 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-text">MerchantHub</span>
+        <p class="footer-tagline">Digital merchant payment platform for modern businesses</p>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="market.html">Products</a></li>
+            <li><a href="payment.html">Sell</a></li>
+            <li><a href="wallet.html">Wallet</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Business</h4>
+          <ul>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="analytics.html">Analytics</a></li>
+            <li><a href="receipts.html">Receipts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="customers.html">Customers</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
       <p>&copy; 2026 MerchantHub &mdash; Merchant Payment Platform</p>
-      <ul class="footer-links">
-        <li><a href="transactions.html">Transactions</a></li>
-        <li><a href="market.html">Products</a></li>
-        <li><a href="payment.html">Sell</a></li>
-        <li><a href="login.html">Login</a></li>
-      </ul>
     </div>
   </footer>
 
