@@ -137,134 +137,7 @@
       </div>
     </section>
 
-    <!-- ===== INTERACTIVE DEMOS ===== -->
-    <div class="container">
-      <div class="divider"></div>
 
-      <!-- ===== WALLET BALANCE SECTION ===== -->
-      <section class="counter-section" data-testid="balance-section">
-        <h2 class="section-title">Merchant Wallet</h2>
-        <p class="section-desc">Your merchant wallet balance. Changes here persist across all pages — top up, withdraw, or reset.</p>
-        <div class="counter-card">
-          <div class="counter-box">
-            <button class="btn btn-icon" data-testid="withdraw-btn" id="withdraw-btn" aria-label="Withdraw R100">
-              <i data-lucide="minus"></i>
-            </button>
-            <span class="counter-value" data-testid="balance-value" id="balance-value">R0</span>
-            <button class="btn btn-icon" data-testid="deposit-btn" id="deposit-btn" aria-label="Deposit R100">
-              <i data-lucide="plus"></i>
-            </button>
-          </div>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
-            <button class="btn btn-outline btn-sm" data-testid="deposit-500" id="deposit-500">+R500</button>
-            <button class="btn btn-outline btn-sm" data-testid="deposit-1000" id="deposit-1000">+R1,000</button>
-            <button class="btn btn-outline" data-testid="reset-btn" id="reset-btn">Reset Balance</button>
-          </div>
-        </div>
-      </section>
-
-      <div class="divider"></div>
-
-      <!-- ===== EXCHANGE RATE SECTION ===== -->
-      <section class="joke-section" data-testid="rate-section">
-        <h2 class="section-title">Live ZAR Exchange Rate</h2>
-        <p class="section-desc">Fetches a live USD to ZAR exchange rate — great for testing async content and loading states.</p>
-        <div class="joke-box">
-          <p class="joke-text" data-testid="rate-text" id="rate-text">Click the button to fetch the latest rate!</p>
-          <div class="joke-loading" data-testid="rate-loading" id="rate-loading" style="display:none;">
-            <i data-lucide="loader" class="spin"></i> Loading...
-          </div>
-        </div>
-        <button class="btn btn-primary" data-testid="fetch-rate-btn" id="fetch-rate-btn">
-          <i data-lucide="refresh-cw"></i> Get Rate
-        </button>
-      </section>
-
-      <div class="divider"></div>
-
-      <section class="features-highlight" data-testid="features-highlight">
-        <h2 class="section-title">Why Merchants Choose Us</h2>
-        <div class="features-grid">
-          <div class="feature-card glass-card">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #2563eb, #7c3aed);">
-              <i data-lucide="zap"></i>
-            </div>
-            <h3>Instant Processing</h3>
-            <p>Process airtime, data bundles, and voucher sales in under 2 seconds with real-time wallet updates.</p>
-          </div>
-          <div class="feature-card glass-card">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #059669, #2d8a4e);">
-              <i data-lucide="shield-check"></i>
-            </div>
-            <h3>Secure Transactions</h3>
-            <p>Every transaction is logged, traceable, and protected with merchant PIN verification.</p>
-          </div>
-          <div class="feature-card glass-card">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #c9a96e, #d97706);">
-              <i data-lucide="bar-chart-3"></i>
-            </div>
-            <h3>Real-time Analytics</h3>
-            <p>Track revenue, top products, customer behavior, and performance trends with live dashboards.</p>
-          </div>
-          <div class="feature-card glass-card">
-            <div class="feature-icon" style="background: linear-gradient(135deg, #dc2626, #c53030);">
-              <i data-lucide="users"></i>
-            </div>
-            <h3>Customer Management</h3>
-            <p>Build loyalty tiers, track spending history, and manage your customer directory effortlessly.</p>
-          </div>
-        </div>
-      </section>
-
-      <div class="divider"></div>
-
-      <!-- ===== QUICK LINKS ===== -->
-      <section class="quick-links-section" data-testid="quick-links">
-        <h2 class="section-title">Explore the Ecosystem</h2>
-        <div class="quick-links-grid">
-          <a href="market.html" class="quick-link-card" data-testid="link-products">
-            <i data-lucide="package"></i>
-            <h3>Product Catalog</h3>
-            <p>Browse &amp; buy airtime, data, vouchers, gaming credits</p>
-          </a>
-          <a href="payment.html" class="quick-link-card" data-testid="link-sell">
-            <i data-lucide="shopping-bag"></i>
-            <h3>Sell Product</h3>
-            <p>Process over-the-counter sales with receipt generation</p>
-          </a>
-          <a href="transactions.html" class="quick-link-card" data-testid="link-transactions">
-            <i data-lucide="receipt"></i>
-            <h3>Transactions</h3>
-            <p>View, filter, and manage your full transaction ledger</p>
-          </a>
-          <a href="wallet.html" class="quick-link-card" data-testid="link-wallet">
-            <i data-lucide="wallet"></i>
-            <h3>Wallet</h3>
-            <p>Top up, transfer funds, and track your wallet activity</p>
-          </a>
-          <a href="customers.html" class="quick-link-card" data-testid="link-customers">
-            <i data-lucide="users"></i>
-            <h3>Customers</h3>
-            <p>Manage your customer directory and loyalty tiers</p>
-          </a>
-          <a href="analytics.html" class="quick-link-card" data-testid="link-analytics">
-            <i data-lucide="bar-chart-3"></i>
-            <h3>Analytics</h3>
-            <p>Charts, KPIs, and insights from your sales data</p>
-          </a>
-          <a href="receipts.html" class="quick-link-card" data-testid="link-receipts">
-            <i data-lucide="file-text"></i>
-            <h3>Receipts</h3>
-            <p>Browse and print all purchase and sale receipts</p>
-          </a>
-          <a href="settings.html" class="quick-link-card" data-testid="link-settings">
-            <i data-lucide="settings"></i>
-            <h3>Settings</h3>
-            <p>Store profile, notifications, security &amp; data management</p>
-          </a>
-        </div>
-      </section>
-    </div>
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -309,38 +182,6 @@
   <script src="db.js"></script>
   <script src="app.js"></script>
   <script>
-    // ===== Wallet (persistent via db.js) =====
-    const balanceEl = document.getElementById('balance-value');
-
-    function refreshBalance() {
-      const bal = FlashDB.getWallet().balance;
-      const prefix = bal < 0 ? '-R' : 'R';
-      balanceEl.textContent = prefix + Math.abs(bal).toLocaleString('en-ZA', {minimumFractionDigits: 0});
-    }
-
-    document.getElementById('deposit-btn').addEventListener('click', () => {
-      FlashDB.adjustWallet(100);
-      refreshBalance();
-    });
-    document.getElementById('withdraw-btn').addEventListener('click', () => {
-      FlashDB.adjustWallet(-100);
-      refreshBalance();
-    });
-    document.getElementById('deposit-500').addEventListener('click', () => {
-      FlashDB.adjustWallet(500);
-      refreshBalance();
-    });
-    document.getElementById('deposit-1000').addEventListener('click', () => {
-      FlashDB.adjustWallet(1000);
-      refreshBalance();
-    });
-    document.getElementById('reset-btn').addEventListener('click', () => {
-      FlashDB.setWalletBalance(5000);
-      refreshBalance();
-    });
-
-    refreshBalance();
-
     // ===== About stats from DB =====
     const products = FlashDB.getProducts();
     const txns = FlashDB.getTransactions();
@@ -348,24 +189,6 @@
     document.getElementById('stat-products').textContent = products.length;
     document.getElementById('stat-transactions').textContent = txns.length;
     document.getElementById('stat-categories').textContent = cats.length;
-
-    // ===== Exchange rate fetcher =====
-    document.getElementById('fetch-rate-btn').addEventListener('click', async () => {
-      const rateText = document.getElementById('rate-text');
-      const loading = document.getElementById('rate-loading');
-      rateText.style.display = 'none';
-      loading.style.display = 'flex';
-      try {
-        const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-        const data = await res.json();
-        const zarRate = data.rates.ZAR;
-        rateText.textContent = '1 USD = ' + zarRate.toFixed(4) + ' ZAR';
-      } catch (e) {
-        rateText.textContent = 'Failed to load rate. Try again!';
-      }
-      loading.style.display = 'none';
-      rateText.style.display = 'block';
-    });
   </script>
 </body>
 </html>
