@@ -1,0 +1,48 @@
+{
+  "testCases": [
+    {
+      "id": "airtime_mtn_r29",
+      "description": "Airtime sale with MTN provider for R29",
+      "params": {
+        "customerPhone": "0821234567",
+        "product": "airtime",
+        "provider": "MTN",
+        "amount": "29",
+        "expectedAmount": "R29"
+      }
+    },
+    {
+      "id": "airtime_vodacom_r50",
+      "description": "Airtime sale with Vodacom provider for R50",
+      "params": {
+        "customerPhone": "0829876543",
+        "product": "airtime",
+        "provider": "Vodacom",
+        "amount": "50",
+        "expectedAmount": "R50"
+      }
+    },
+    {
+      "id": "data_telkom_r100",
+      "description": "Data bundle sale with Telkom provider for R100",
+      "params": {
+        "customerPhone": "0815555555",
+        "product": "data",
+        "provider": "Telkom",
+        "amount": "100",
+        "expectedAmount": "R100"
+      }
+    },
+    {
+      "id": "airtime_cellc_r10",
+      "description": "Airtime sale with Cell C provider for R10",
+      "params": {
+        "customerPhone": "0741111111",
+        "product": "airtime",
+        "provider": "Cell C",
+        "amount": "10",
+        "expectedAmount": "R10"
+      }
+    }
+  ]
+}
