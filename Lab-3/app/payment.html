@@ -328,7 +328,7 @@
       const phone = document.getElementById('customer-phone');
       const phoneError = document.getElementById('error-phone');
       const phoneVal = phone.value.replace(/\s/g, '');
-      if (!phoneVal || phoneVal.length < 10 || !/^0[67]\d{8}$/.test(phoneVal)) {
+      if (!phoneVal || phoneVal.length < 10 || !/^0[6-8]\d{8}$/.test(phoneVal)) {
         phoneError.textContent = 'Valid SA phone number required (e.g. 072 123 4567)';
         valid = false;
       } else { phoneError.textContent = ''; }
